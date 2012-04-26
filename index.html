@@ -25,6 +25,16 @@
 
 <div id="mainpage" data-role="page">
   <script>
+    $("#mainpage").live('pagecreate', function() {
+        $("form").submit(function(event) {
+            event.stopPropagation();
+            event.preventDefault();
+
+            // Do stuff here (usually AJAX);
+            mainpage_BingSearch();
+            return false;
+        });
+    });
     $("#mainpage").live("pageinit", mainpage_init);
     $("#mainpage").live("pagebeforeshow", mainpage_show);
   </script>
@@ -34,8 +44,9 @@
   <!-- /header -->
 
   <div data-role="content">
-    <input id="searchbar" type="search"/>
-    <button id="searchbutton" data-icon="search" data-role="button" data-theme="c" name="searchbutton" onclick="return mainpage_BingSearch();" type="button">Search</button>
+    <form id="searchform" action="">
+      <input id="searchbar" data-icon="search" data-theme="c" name="searchbar" type="search"></input>
+    </form>
   </div>
 
   <div id="results-container">

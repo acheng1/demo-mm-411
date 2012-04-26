@@ -1,7 +1,7 @@
 // Bing API information
 var gBingServiceURI = "http://api.bing.net/json.aspx";
 var gBingAppID = "828426A1EC5F944259B11E6BF645E1F9744EE229";
-var gBingSearchRadius = "10.0";
+var gBingSearchRadius = "25.0";
 var gBingSearchNumResults = 10;
 
 var gResourceRootUrl = "http://ec2-184-72-7-75.us-west-1.compute.amazonaws.com/";
@@ -11,7 +11,7 @@ var gListingGrammarRootUrl = gGrammarRootUrl + "?type=listing";
 var gDetailsGrammarRootUrl = gGrammarRootUrl + "?type=details";
 var gShareGrammarRootUrl = gGrammarRootUrl + "?type=share";
 var gCurrentMeeting = null;
-var gCurrentMeetingMaxParticipants = 10;
+var gCurrentMeetingMaxParticipants = 15;
 
 var gLocation = null;
 var gChangeSearchString = null;
@@ -77,7 +77,7 @@ function mainpage_show() {
     if (gChangeSearchString != null) {
         $("#searchbar").val(gChangeSearchString);
         gChangeSearchString = null;
-        $("#searchbutton").click();
+        $("#searchform").submit();
     } else if (gListings == null || gListings.length == 0) {
         if (gCurrentMeeting != null) {
             var v = $("#searchbar").val();
@@ -124,7 +124,7 @@ function mainpage_searchGrammarHandler(result) {
         var interp = result[0].interpretation;
         var regexmatch = null;
         if (interp == "yes") {
-            $("#searchbutton").click();
+            $("#searchform").submit();
         } else if (interp == "no") {
             $("#searchbar").val("");
             var msg = "What are you looking for?";
@@ -133,13 +133,13 @@ function mainpage_searchGrammarHandler(result) {
             NativeBridge.setGrammar(gSearchGrammarRootUrl, null, mainpage_searchGrammarHandler);
         } else if ((regexmatch = interp.match(/^yes,(.+)/i)) != null) {
             $("#searchbar").val($("#searchbar").val() + ", " + regexmatch[1]);
-            $("#searchbutton").click();
+            $("#searchform").submit();
         } else if ((regexmatch = interp.match(/^no,(.+)/i)) != null) {
             $("#searchbar").val(regexmatch[1]);
-            $("#searchbutton").click();
+            $("#searchform").submit();
         } else {
             $("#searchbar").val(interp);
-            $("#searchbutton").click();
+            $("#searchform").submit();
         }
     } else {
         NativeBridge.setMessage("What?");
@@ -158,7 +158,7 @@ function mainpage_listingGrammarHandler(result) {
             $.mobile.changePage("#detailspage");
         } else if ((regexmatch = interp.match(/^no,(.+)/i)) != null) {
             $("#searchbar").val(regexmatch[1]);
-            $("#searchbutton").click();
+            $("#searchform").submit();
         } else if ((regexmatch = interp.match(/^connect,(\d+)/i)) != null) {
             var idx = regexmatch[1];
             setTimeout('window.location="tel:' + gListings[idx].PhoneNumber+ '";', 500);
