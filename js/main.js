@@ -1,7 +1,7 @@
 // Bing API information
 var gBingServiceURI = "http://api.bing.net/json.aspx";
 var gBingAppID = "828426A1EC5F944259B11E6BF645E1F9744EE229";
-var gBingSearchRadius = "10.0";
+var gBingSearchRadius = "25.0";
 var gBingSearchNumResults = 10;
 
 var gResourceRootUrl = "http://ec2-184-72-7-75.us-west-1.compute.amazonaws.com/";
@@ -11,7 +11,7 @@ var gListingGrammarRootUrl = gGrammarRootUrl + "?type=listing";
 var gDetailsGrammarRootUrl = gGrammarRootUrl + "?type=details";
 var gShareGrammarRootUrl = gGrammarRootUrl + "?type=share";
 var gCurrentMeeting = null;
-var gCurrentMeetingMaxParticipants = 10;
+var gCurrentMeetingMaxParticipants = 15;
 
 var gLocation = null;
 var gChangeSearchString = null;
