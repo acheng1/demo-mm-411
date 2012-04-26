@@ -199,11 +199,18 @@ function mainpage_BingSearch() {
                         $('#results-container').empty();
                         $('<ul>').attr({ 'data-role': 'listview', 'data-inset': 'false', 'id': 'search-results' }).appendTo('#results-container');
                         $.each(gListings, function (i, item) {
+                            var p1 = new LatLon(Geo.parseDMS(item.Latitude), Geo.parseDMS(item.Longitude));
+                            var p2 = new LatLon(Geo.parseDMS(gLocation.latitude), Geo.parseDMS(gLocation.longitude));
                             $('<li>').append(
                                 $('<a>').attr({ 'href': '#detailspage', 'onclick': 'globalSelectListing(' + i + ');return false;'})
                                     .html(item.Title + '<br />').append(
                                     $('<span>').attr('class', 'listitem-info')
-                                        .html(item.Address + ', ' + item.City + ', ' + item.StateOrProvince + ' ' + item.PostalCode))).appendTo("#search-results");
+                                        .html(item.Address + ', ' +
+                                              item.City + ', ' + 
+                                              item.StateOrProvince + ' ' +
+                                              item.PostalCode + '<br />').append(
+                                        $('<span>').attr('class', 'listitem-info')
+                                            .html((roundNumber(p1.distanceTo(p2)/1.609344, 2)) + ' miles')))).appendTo("#search-results");
                         });
                         $('#results-container').trigger('create');
 
