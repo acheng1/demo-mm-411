@@ -77,7 +77,7 @@ function mainpage_show() {
     if (gChangeSearchString != null) {
         $("#searchbar").val(gChangeSearchString);
         gChangeSearchString = null;
-        $("#searchbutton").click();
+        $("#searchform").submit();
     } else if (gListings == null || gListings.length == 0) {
         if (gCurrentMeeting != null) {
             var v = $("#searchbar").val();
@@ -124,7 +124,7 @@ function mainpage_searchGrammarHandler(result) {
         var interp = result[0].interpretation;
         var regexmatch = null;
         if (interp == "yes") {
-            $("#searchbutton").click();
+            $("#searchform").submit();
         } else if (interp == "no") {
             $("#searchbar").val("");
             var msg = "What are you looking for?";
@@ -133,13 +133,13 @@ function mainpage_searchGrammarHandler(result) {
             NativeBridge.setGrammar(gSearchGrammarRootUrl, null, mainpage_searchGrammarHandler);
         } else if ((regexmatch = interp.match(/^yes,(.+)/i)) != null) {
             $("#searchbar").val($("#searchbar").val() + ", " + regexmatch[1]);
-            $("#searchbutton").click();
+            $("#searchform").submit();
         } else if ((regexmatch = interp.match(/^no,(.+)/i)) != null) {
             $("#searchbar").val(regexmatch[1]);
-            $("#searchbutton").click();
+            $("#searchform").submit();
         } else {
             $("#searchbar").val(interp);
-            $("#searchbutton").click();
+            $("#searchform").submit();
         }
     } else {
         NativeBridge.setMessage("What?");
@@ -158,7 +158,7 @@ function mainpage_listingGrammarHandler(result) {
             $.mobile.changePage("#detailspage");
         } else if ((regexmatch = interp.match(/^no,(.+)/i)) != null) {
             $("#searchbar").val(regexmatch[1]);
-            $("#searchbutton").click();
+            $("#searchform").submit();
         } else if ((regexmatch = interp.match(/^connect,(\d+)/i)) != null) {
             var idx = regexmatch[1];
             setTimeout('window.location="tel:' + gListings[idx].PhoneNumber+ '";', 500);
