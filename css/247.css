@@ -5,11 +5,11 @@
 }
 
 .listitem-info {
-	font-size: 10pt;
+    font-size: 10pt;
 }
 
 .searchfor {
-	font-weight: bold;
+    font-weight: bold;
 }
 
 .ui-page {
@@ -23,4 +23,8 @@ div.ui-page {
     backface-visibility:hidden;
     -webkit-backface-visibility:hidden;
     -moz-backface-visibility:hidden;
+    /*height: 100%; */
 }
+
+.ui-grid-a .ui-block-a { width: 30% }
+.ui-grid-a .ui-block-b { width: 70%; } 

@@ -1,0 +1,147 @@
+.logo {
+    background-image: url("../images/att/Px411-Branding.png") !important;
+    background-size: 320px 38px;
+    width:320px;
+    height:38px;
+    padding: 0px;
+    margin: 0px;
+}
+
+.ui-header {
+    border: none;
+}
+
+.ui-page {
+    background-image: url("../images/att/Px411-Background-NoSearchBar.png") !important;
+}
+
+.ui-content {
+    margin:8px;
+    padding:0px;
+}
+
+#search-results .ui-corner-all {
+    border-radius:0.1em; 
+} 
+
+#searchbar-container {
+    background-image: url("../images/att/Px411-SearchBar.png");
+    background-size: 320px 52px;  
+    width:320px;
+    height:52px;
+    padding:0px;
+    margin:0px;
+}
+
+#searchform {
+    margin:5px 0px 0px 8px;
+    width:305px !important;
+    height:12px;
+}
+
+.listing-name {
+        font-family: Arial;
+        font-size: 12pt;
+        color: #0a4c83;
+        font-weight: bold;
+}
+
+.listing-address {
+        font-family: Arial;
+        font-size: 11pt;
+        color: #6b6b6b;
+}
+
+.listing-distance {
+        font-family: Arial;
+        font-size: 10pt;
+        color: #9f9e9e;
+}
+
+.details-name {
+        font-family: Arial;
+        font-size: 16pt;
+        color: #0b335c;
+        font-weight: bold;
+}
+
+.details-url {
+        font-family: Arial;
+        font-size: 11pt;
+        font-weight: bold;
+        color: #7c7c7c;
+}
+.details-label {
+        font-family: Arial;
+        font-size: 8pt;
+        color: #2073ae;
+}
+
+.details-address {
+        font-family: Arial;
+        font-size: 10pt;
+        color: #353535;
+}
+
+.share-name {
+        font-family: Arial;
+        font-size: 16pt;
+        color: #0b335c;
+        font-weight: bold;
+}
+
+.share-url {
+        font-family: Arial;
+        font-size: 11pt;
+        font-weight: bold;
+        color: #7c7c7c;
+}
+
+.share-address {
+        font-family: Arial;
+        font-size: 13pt;
+        font-weight: bold;
+        color: #353535;
+}
+
+.share-contact_name {
+        font-family: Arial;
+        font-size: 14pt;
+        font-weight: bold;
+        color: #0a4c83;
+}
+
+.share-add_other {
+        font-family: Arial;
+        font-size: 14pt;
+        font-weight: bold;
+        color: #6b6b6b;
+}
+
+#connectme {
+    background-image: url("../images/att/Px411-Button-ConnectMe.png");
+    background-size: 151px 46px;  
+    width: 151px;
+    height: 46px;
+}
+
+#share-info {
+    border:none;
+}
+
+.ad {
+    background: url("../images/att/Px411-BannerAd-CheesecakeFactory-Smaller.png") !important;
+    background-size: 320px 70px;  
+    width: 320px;
+    height: 70px;
+    border:none;
+}
+
+.share-footer {
+    background: url("../images/att/Px411-Button-SendButtonBackground-cropped.png") !important;
+    background-size: 320px 60px;  
+    width: 320px;
+    height: 60px;
+    border:none;
+}
+

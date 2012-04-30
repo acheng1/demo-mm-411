@@ -20,7 +20,7 @@ var gSelectedListing = null;
 
 var gSharePrecheckIndex = null;
 
-var gRecipientList = null;
+var gRecipientList = [];
 
 //-----------------------------------------------------------------------------
 
@@ -73,7 +73,7 @@ function mainpage_init() {
     NativeBridge.getLocation(globalLocationHandler);
 }
 
-function mainpage_show() {
+function mainpage_before_show() {
     if (gChangeSearchString != null) {
         $("#searchbar").val(gChangeSearchString);
         gChangeSearchString = null;
@@ -84,18 +84,18 @@ function mainpage_show() {
             if (v != "") {
                 var msg = "Are you looking for '" + v + "'?";
                 NativeBridge.setMessage(msg);
-                //NativeBridge.playTTS("female", "en-US", msg);
+                NativeBridge.playTTS("female", "en-US", msg);
                 NativeBridge.setGrammar(gSearchGrammarRootUrl, null, mainpage_searchGrammarHandler);
             } else {
                 var msg = "What are you looking for?";
                 NativeBridge.setMessage(msg);
-                //NativeBridge.playTTS("female", "en-US", msg);
+                NativeBridge.playTTS("female", "en-US", msg);
                 NativeBridge.setGrammar(gSearchGrammarRootUrl, null, mainpage_searchGrammarHandler);
             }
         }
     } else {
-        var msg = "Which location?";
-        NativeBridge.setMessage(msg);
+        //var msg = "Which location?";
+        //NativeBridge.setMessage(msg);
         //NativeBridge.playTTS("female", "en-US", msg);
         NativeBridge.setGrammar(generateListingGrammarUrl(), null, mainpage_listingGrammarHandler);
     }
@@ -111,7 +111,7 @@ function mainpage_calendarHandler(result) {
                 $("#searchbar").val(gCurrentMeeting.location);
                 var msg = "Are you looking for '" + gCurrentMeeting.location + "'?";
                 NativeBridge.setMessage(msg);
-                //NativeBridge.playTTS("female", "en-US", msg);
+                NativeBridge.playTTS("female", "en-US", msg);
                 NativeBridge.setGrammar(gSearchGrammarRootUrl, null, mainpage_searchGrammarHandler);
                 break;
             }
@@ -129,7 +129,7 @@ function mainpage_searchGrammarHandler(result) {
             $("#searchbar").val("");
             var msg = "What are you looking for?";
             NativeBridge.setMessage(msg);
-            //NativeBridge.playTTS("female", "en-US", msg);
+            NativeBridge.playTTS("female", "en-US", msg);
             NativeBridge.setGrammar(gSearchGrammarRootUrl, null, mainpage_searchGrammarHandler);
         } else if ((regexmatch = interp.match(/^yes,(.+)/i)) != null) {
             $("#searchbar").val($("#searchbar").val() + ", " + regexmatch[1]);
@@ -197,20 +197,21 @@ function mainpage_BingSearch() {
                     if (data && data.SearchResponse && data.SearchResponse.Phonebook && data.SearchResponse.Phonebook.Results) {
                         gListings = data.SearchResponse.Phonebook.Results;
                         $('#results-container').empty();
-                        $('<ul>').attr({ 'data-role': 'listview', 'data-inset': 'false', 'id': 'search-results' }).appendTo('#results-container');
+                        $('<ul>').attr({ 'data-role': 'listview', 'data-inset': 'true', 'id': 'search-results' }).appendTo('#results-container');
                         $.each(gListings, function (i, item) {
                             var p1 = new LatLon(Geo.parseDMS(item.Latitude), Geo.parseDMS(item.Longitude));
                             var p2 = new LatLon(Geo.parseDMS(gLocation.latitude), Geo.parseDMS(gLocation.longitude));
                             $('<li>').append(
-                                $('<a>').attr({ 'href': '#detailspage', 'onclick': 'globalSelectListing(' + i + ');return false;'})
-                                    .html(item.Title + '<br />').append(
-                                    $('<span>').attr('class', 'listitem-info')
-                                        .html(item.Address + ', ' +
-                                              item.City + ', ' + 
-                                              item.StateOrProvince + ' ' +
-                                              item.PostalCode + '<br />').append(
-                                        $('<span>').attr('class', 'listitem-info')
-                                            .html((roundNumber(p1.distanceTo(p2)/1.609344, 2)) + ' miles')))).appendTo("#search-results");
+                                $('<a>').attr({ 'href': '#detailspage', 'onclick': 'globalSelectListing(' + i + ');return false;'}).append(
+                                    $('<span>').attr('class', 'listing-name')
+                                        .html(item.Title + '<br />').append(
+                                        $('<span>').attr('class', 'listing-address')
+                                            .html(item.Address + ', ' +
+                                                  item.City + ', ' + 
+                                                  item.StateOrProvince + ' ' +
+                                                  item.PostalCode + '<br />').append(
+                                            $('<span>').attr('class', 'listing-distance')
+                                                .html((roundNumber(p1.distanceTo(p2)/1.609344, 2)) + ' miles'))))).appendTo("#search-results");
                         });
                         $('#results-container').trigger('create');
 
@@ -220,8 +221,9 @@ function mainpage_BingSearch() {
                         } else {
                             var msg = "Which location?";
                             NativeBridge.setMessage(msg);
-                            //NativeBridge.playTTS("female", "en-US", msg);
+                            NativeBridge.playTTS("female", "en-US", msg);
                             NativeBridge.setGrammar(generateListingGrammarUrl(), null, mainpage_listingGrammarHandler);
+                            $('#ad').hide();
                         }
                     } else {
                         $('#results-container').empty();
@@ -230,7 +232,7 @@ function mainpage_BingSearch() {
 
                         var msg = "What are you looking for?";
                         NativeBridge.setMessage(msg);
-                        //NativeBridge.playTTS("female", "en-US", msg);
+                        NativeBridge.playTTS("female", "en-US", msg);
                         NativeBridge.setGrammar(gSearchGrammarRootUrl, null, mainpage_searchGrammarHandler);
                     }
                 });
@@ -259,34 +261,57 @@ function detailspage_init() {
     NativeBridge.setGrammar(null, null, emptyGrammarHandler);
 }
 
-function detailspage_show() {
-    var msg = "What can I help you with?";
-    NativeBridge.setMessage(msg);
+function detailspage_before_show() {
+    //var msg = "What can I help you with?";
+    //NativeBridge.setMessage(msg);
     //NativeBridge.playTTS("female", "en-US", msg);
-    NativeBridge.setGrammar(generateDetailsGrammarUrl(), null, detailspage_detailsGrammarHandler);
 
     //var address = gSelectedListing.Address + ', ' + gSelectedListing.City + ', ' + gSelectedListing.StateOrProvince + ' ' + gSelectedListing.PostalCode;
     //var mapKey = 'AqjFRf87m4pQCIGoMVGrIYHvhAuEhIIsTg45OQBhPArmxXM8nSllp6CZrEuKo9t-';
     //var mapURL = 'http://dev.virtualearth.net/REST/V1/Imagery/Map/Road/' +
     //    encodeURIComponent(address) +
     //    '?mapSize=192,221&mapLayer=TrafficFlow&key=' + mapKey;
-    var mapURL = 'http://maps.googleapis.com/maps/api/staticmap?' +
-        'zoom=16' + '&' +
-        'size=275x300' + '&' +
-        'maptype=roadmap' + '&' +
-        'markers=' + encodeURIComponent('size:mid|color:red|' + gSelectedListing.Latitude + ',' + gSelectedListing.Longitude) + '&' +
-        'sensor=false';
-
+    //var mapURL = 'http://maps.googleapis.com/maps/api/staticmap?' +
+    //    'zoom=16' + '&' +
+    //    'size=290x300' + '&' +
+    //    'maptype=roadmap' + '&' +
+    //    'markers=' + encodeURIComponent('size:mid|color:red|' + gSelectedListing.Latitude + ',' + gSelectedListing.Longitude) + '&' +
+    //    'sensor=false';
     $('#details').empty();
-    $('<h2 />').html(gSelectedListing.Title).appendTo('#details');
-    $('<p class="listitem-info" />').html(gSelectedListing.Address + '<br />' +
-                                          gSelectedListing.City + ', ' +
-                                          gSelectedListing.StateOrProvince + ' ' +
-                                          gSelectedListing.PostalCode + '<br/>' +
-                                          gSelectedListing.PhoneNumber).appendTo('#details');
+    $('<ul>').attr({ 'data-role': 'listview', 'data-inset': 'true', 'id': 'details-listing' }).appendTo('#details');
+    $('<li>').append(
+      $('<span>').attr('class', 'details-name')
+        .html(gSelectedListing.Title)).appendTo('#details-listing');
+    $('<li>').append(
+      $('<div>').attr('class', 'ui-grid-a').append(
+        $('<div>').attr('class', 'ui-block-a').append(
+          $('<span>').attr('class', 'details-label')
+            .html('ADDRESS:')),
+        $('<div>').attr('class', 'ui-block-b').append(
+          $('<span>').attr('class', 'details-address')
+            .html(gSelectedListing.Address + '<br />' +
+                  gSelectedListing.City + ', ' +
+                  gSelectedListing.StateOrProvince)))).appendTo('#details-listing');
     $('#details').trigger('create');
     $('#call').attr('href', 'tel:' + gSelectedListing.PhoneNumber.replace(/[^0-9]/g, '')).trigger('create');
-    $('#map').attr('src', mapURL).trigger('create');
+}
+
+function detailspage_show() {
+    NativeBridge.setMessage(null);
+    NativeBridge.setGrammar(generateDetailsGrammarUrl(), null, detailspage_detailsGrammarHandler);
+
+    var myLatlng = new google.maps.LatLng(gSelectedListing.Latitude, gSelectedListing.Longitude);
+    var myOptions = {
+      zoom: 16,
+      center: myLatlng,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    }
+    var map = new google.maps.Map(document.getElementById("map"), myOptions);
+    
+    var marker = new google.maps.Marker({
+        position: myLatlng, 
+        map: map
+    });   
 }
 
 function detailspage_detailsGrammarHandler(result) {
@@ -295,6 +320,7 @@ function detailspage_detailsGrammarHandler(result) {
         var regexmatch = null;
         if (interp == "connect") {
             setTimeout('window.location="' + $("#call").attr("href") + '";', 500);
+            NativeBridge.setGrammar(generateDetailsGrammarUrl(), null, detailspage_detailsGrammarHandler);
         } else if (interp == "different") {
             history.back();
         } else if ((regexmatch = interp.match(/^\d+$/)) != null) {
@@ -347,8 +373,9 @@ function sharepage_init() {
     NativeBridge.setGrammar(null, null, emptyGrammarHandler);
 }
 
-function sharepage_show() {
-    NativeBridge.setMessage("Who do you want to share with?");
+function sharepage_before_show() {
+    //NativeBridge.setMessage("Who do you want to share with?");
+    NativeBridge.setMessage(null);
     NativeBridge.setGrammar(generateShareGrammarUrl(), null, sharepage_shareGrammarHandler);
 
     if (gSelectedListing == null) {
@@ -356,13 +383,19 @@ function sharepage_show() {
         return;
     }
 
-    $('#name').html(gSelectedListing.Title);
-    $('#info').html(gSelectedListing.Address + '<br />' +
-                    gSelectedListing.City + ', ' +
-                    gSelectedListing.StateOrProvince + ' ' +
-                    gSelectedListing.PostalCode + '<br />' +
-                    gSelectedListing.PhoneNumber);
-
+    $('#share-info').empty();
+    $('<ul>').attr({ 'data-role': 'listview', 'data-inset': 'true', 'id': 'share-listing' }).appendTo('#share-info');
+    $('<li>').append(
+      $('<span>').attr('class', 'share-name')
+        .html(gSelectedListing.Title + '<br />'),
+      $('<span>').attr('class', 'share-address').html(' ' +
+              gSelectedListing.Address + ', ' +
+              gSelectedListing.City + ', ' +
+              gSelectedListing.StateOrProvince).prepend(
+        $('<img>').attr({'src':'images/att/Px411-AddressPointer.png',
+                'width':'10px',
+                'height':'15px'}))).appendTo('#share-listing');
+    $('#share-info').trigger('create');
 
     if (gCurrentMeeting == null) {
         alert("no meeting!");
@@ -374,7 +407,7 @@ function sharepage_show() {
 
     $('#address-select').empty();
     $('<input />').attr({'id' : 'address_all', 'class' : 'custom', 'name' : 'address_all', 'type' : 'checkbox'}).appendTo('#address-select');
-    $('<label />').attr({'for' : 'address_all', 'data-inline' : 'true'}).text('Select All').appendTo('#address-select');
+    $('#address_all').hide();
     $('<fieldset />').attr({ 'id': 'addresses', "data-role": "controlgroup" }).appendTo('#address-select');
 
     var participants = gCurrentMeeting.participants != null ? gCurrentMeeting.participants : [];
@@ -384,9 +417,22 @@ function sharepage_show() {
     }
     for (var i = 0; i < count; i++) {
         var checked = (gSharePrecheckIndex && gSharePrecheckIndex == i) ? true : false;
-        $('<input />').attr({ 'type': 'checkbox', 'checked' : checked, 'name': 'address', 'id': 'address' + i, "class": "custom" }).appendTo('#addresses');
-        $('<label />').attr({ 'for': 'address' + i }).text(participants[i].name).appendTo('#addresses');
+        $('<input />').attr({ 'type': 'checkbox',
+                              'checked' : checked, 
+                              'name': 'address', 
+                              'id': 'address' + i, 
+                              "class": "custom",
+                              "data-iconpos" : "right"}).appendTo('#addresses');
+        $('<label />').attr({ 'for': 'address' + i,
+                              'class': 'share-contact_name'}).text(participants[i].name).appendTo('#addresses');
     }
+    $('<input />').attr({ 'type': 'checkbox',
+                          'data-icon' : 'plus',
+                          'id' : 'add_other',
+                          "class": "custom",
+                          "data-iconpos" : "right"}).appendTo('#addresses');
+    $('<label />').attr({ 'for': 'add_other',
+                          'class': 'share-add_other'}).text('Add Other Contacts').appendTo('#addresses');
     gSharePrecheckIndex = null;
     $('#address-select').trigger('create');
 
@@ -431,10 +477,12 @@ function sharepage_shareGrammarHandler(result) {
             $("#address" + idx).attr("checked", true).checkboxradio("refresh");
             $("#smsbutton").click();
         }
+        NativeBridge.setMessage(null);
     } else {
         NativeBridge.setMessage("What?");
-        NativeBridge.setGrammar(generateShareGrammarUrl(), null, sharepage_shareGrammarHandler);
     }
+
+    NativeBridge.setGrammar(generateShareGrammarUrl(), null, sharepage_shareGrammarHandler);
 }
 
 function generateShareGrammarUrl() {
@@ -453,35 +501,39 @@ function generateShareGrammarUrl() {
 }
 
 function sendSMS() {
-    gRecipientList = "";
-    $("input[name=address]:checked").each(
-        function () {
-            var id = $(this).attr("id");
-            if (gRecipientList != "") {
-                gRecipientList += ", ";
-            }
-            gRecipientList += $("label[for="+id+"]").text();
-        }
-    );
-
-    if (gRecipientList && gRecipientList != "") {
-        alert("Sending SMS to " + gRecipientList);
-    }
+    var body  = gSelectedListing.Title + ', ' +
+                gSelectedListing.Address + ', ' +
+                gSelectedListing.City + ', ' +
+                gSelectedListing.StateOrProvince;
+    NativeBridge.sendText(null, body);
 }
 
 function sendEmail() {
-    gRecipientList = "";
+    gRecipientList = [];
     $("input[name=address]:checked").each(
         function () {
-            var id = $(this).attr("id");
-            if (gRecipientList != "") {
-                gRecipientList += ", ";
+          var id = $(this).attr("id");
+          if ((regexmatch = id.match(/(\d+)$/)) != null) {
+            var index = regexmatch[1];
+            if (gCurrentMeeting != null) {
+              var participants = gCurrentMeeting.participants;
+              if (participants.length && participants[index] != null) {
+                var email = participants[index].url.replace("mailto:","");
+                gRecipientList.push(email);
+              }
             }
-            gRecipientList += $("label[for="+id+"]").text();
+          }
         }
     );
 
-    if (gRecipientList && gRecipientList != "") {
-        alert("Sending e-mail to " + gRecipientList);
+    var body  = gSelectedListing.Title + ', ' +
+                gSelectedListing.Address + ', ' +
+                gSelectedListing.City + ', ' +
+                gSelectedListing.StateOrProvince;
+    var subject = gCurrentMeeting.title;
+    if (gRecipientList.length) {
+      NativeBridge.sendMail(gRecipientList, subject, body);
+    } else {
+      NativeBridge.sendMail(null, subject, body);
     }
 }
