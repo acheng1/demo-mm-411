@@ -2,131 +2,125 @@
 <html>
 
 <head>
-  <meta charset="utf-8" />
-  <title>Enhanced 411</title>
-  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=yes" name="viewport" />
-  <meta content="yes" name="apple-mobile-web-app-capable" />
-  <link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
-  <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
-
-  <link href="css/247.css" rel="stylesheet" />
-  <link href="css/att.css" rel="stylesheet" />
-  <script src="common/js/bridge.js"></script>
-  <!--script src="common/js/bridge-fake.js"></script-->
-  <script src="js/main.js"></script>
-  <script src="js/util.js"></script>
-  <script src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
-  <script src="js/latlon.js">/* Latitude/Longitude formulae */</script>
-  <script src="js/geo.js">/* Geodesy representation conversions */</script>
-  <script src="js/att.js"></script>
-  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+<title>Enhanced 411</title>
+<meta charset="UTF-8" />
+<meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport" />
+<meta content="yes" name="apple-mobile-web-app-capable" />
+<link rel="stylesheet" type="text/css" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
+<link rel="stylesheet" type="text/css" href="css/base.css" />
+<link rel="stylesheet" type="text/css" href="css/att.css" />
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="common/js/bridge.js"></script> -->
+<!--<script type="text/javascript" src="common/js/bridge-fake.js"></script>-->
+<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript" src="js/util.js">/* Utilities */</script>
+<script type="text/javascript" src="js/latlon.js">/* Latitude/Longitude formula */</script>
+<script type="text/javascript" src="js/geo.js">/* Geodesy representation conversions */</script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+<script type="text/javascript" src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
 </head>
 
 <body onload="load();">
 
-<div id="mainpage" data-role="page" style="background-image: url(images/att/PX411-Background-SearchBar.png">
-  <script>
+<div id="mainpage" class="mainpage" data-role="page">
+    <script type="text/javascript">
     $("#mainpage").live("pagecreate", function() {
-        $("form").submit(function(event) {
-            event.stopPropagation();
-            event.preventDefault();
+    $("form").submit(function(event) {
+        event.stopPropagation();
+        event.preventDefault();
 
-            // Do stuff here (usually AJAX);
-            mainpage_BingSearch();
-            document.getElementById("focusLink").focus();
-            return false;
-        });
+        // Do stuff here (usually AJAX);
+        mainpage_BingSearch();
+        document.getElementById("focusLink").focus();
+        return false;
+    });
     });
     $("#mainpage").live("pageinit", mainpage_init);
     $("#mainpage").live("pagebeforeshow", mainpage_before_show);
-  </script>
-  <div data-role="content" style="margin:0px">
-    <div class="logo"></div>
-  </div>
-  <!-- /header -->
-
-  <div id="searchbar-container" data-role="content">
-    <form id="searchform" action="">
-      <input id="searchbar" name="searchbar" type="search"></input>
-      <a href="#" id="focusLink"></a>
-    </form>
-  </div>
-
-  <div id="results-container" data-role="content" class="content">
-  </div>
-  <div data-role="footer" id="ad" class="ad" style="height:70px" data-position="fixed">
-  </div>
-  <!-- /ui-body wrapper -->
-</div>
+    $("#mainpage").live("pageshow", mainpage_show);
+    </script>
+    <div data-role="header">
+        <div class="logo">
+        </div>
+    </div>
+    <!-- /header -->
+    <div data-role="content">
+        <div class="searchbar">
+            <form id="search-form" action="">
+                <input id="searchbar" name="searchbar" type="search" />
+                <a id="focusLink" href="#"></a>
+            </form>
+        </div>
+        <div id="results-container">
+        </div>
+    </div>
+    <div data-position="fixed" data-role="footer">
+        <div id="ad">
+        </div>
+    </div>
+    <!-- /ui-body wrapper --></div>
 <!-- /page -->
-
 <div id="detailspage" data-role="page">
-  <script>
+    <script type="text/javascript">
     $("#detailspage").live("pageinit", detailspage_init);
     $("#detailspage").live("pagebeforeshow", detailspage_before_show);
     $("#detailspage").live("pageshow", detailspage_show);
-  </script>
-  <div data-role="content" style="margin:0px">
-    <div class="logo">
-      <a href="#mainpage" class="ui-btn-left" style="border:0; border-radius:0; box-shadow:none; top:0px; margin-top:5px">
-        <img src="images/att/Px411-Button-ResultsBack.png" width="62px" height="27px" style="border:0; border-radius:0;"/>
-      </a>
+    </script>
+    <div data-role="header">
+        <div class="logo">
+            <a class="ui-btn-left back-btn-results" href="#mainpage">
+            </a>
+        </div>
     </div>
-  </div>
-  <!-- /header -->
-  <div id="details" data-role="content">
-  </div>
-  <div data-role="content">
-    <div align="center" data-type="horizontal">
-      <span style="float: left">
-        <a id="call">
-          <img id="connectme" src="images/att/Px411-Button-ConnectMe.png" width="151px" height="46px"/></a>
-        </a>
-      </span>
-      <span style="float: right">
-        <a id="sharebutton" href="#sharepage">
-          <img id="connectme" src="images/att/Px411-Button-ShareInfo.png" width="151px" height="46px"/></a>
-      </span>
+    <!-- /header -->
+    <div data-role="content">
+        <div id="details">
+        </div>
+        <div data-type="horizontal" style="overflow: hidden;">
+            <div class="left">
+                <a id="call" class="ui-btn-left connect-me-btn"></a>
+            </div>
+            <div class="right">
+                <a class="ui-btn-right share-info-btn" href="#sharepage"></a>
+            </div>
+        </div>
+        <div align="center">
+            <div id="map">
+            </div>
+            <div id="directions-panel">
+            </div>
+        </div>
     </div>
-  </div>
-  <div align="center">
-    <div id="map" align="center" data-role="content" style="width:290px; height:300px"></div>
-  </div>
-  
-  <!-- /ui-body wrapper -->
-</div>
+    <!-- /ui-body wrapper --></div>
 <!-- /page -->
-
 <div id="sharepage" data-role="page">
-  <script>
+    <script type="text/javascript">
     $("#sharepage").live("pageinit", sharepage_init);
     $("#sharepage").live("pagebeforeshow", sharepage_before_show);
-  </script>
-  <div data-role="content" style="margin:0px">
-    <div class="logo">
-      <a href="#detailspage" class="ui-btn-left" style="border:0; border-radius:0; box-shadow:none; top:0px; margin-top:5px">
-        <img src="images/att/Px411-Button-InfoBack.png" width="42px" height="27px"/>
-      </a>
+    </script>
+    <div data-role="header">
+        <div class="logo">
+            <a class="ui-btn-left back-btn-info" href="#detailspage"></a>
+        </div>
     </div>
-  </div>
-  <!-- /header -->
-  <div id="share-info" data-role="content">
-  </div>
-  <div id="address-select" data-role="content">
-  </div>
-  <div data-role="footer" class="share-footer" data-position="fixed">
-    <span style="float: left;margin-top:8px; margin-left:7px">
-      <a id="smsbutton" href="#" rel="external" onclick="sendSMS(); return false;">
-        <img src="images/att/Px411-Button-SendSMS.png" width="151" height="46"/></a></li>
-    </span>
-    <span style="float: right;margin-top:8px; margin-right:7px">
-      <a id="emailbutton" href="#" rel="external" onclick="sendEmail(); return false;">
-        <img src="images/att/Px411-Button-SendEmail.png" width="151" height="46"/></a></li>
-    </span>
-  </div>
-  <!-- /ui-body wrapper -->
-</div>
+    <!-- /header -->
+    <div data-role="content">
+        <div id="share-info">
+        </div>
+        <div id="address-select">
+        </div>
+    </div>
+    <div data-position="fixed" data-role="footer">
+        <div class="share-footer">
+            <a id="smsbutton" class="ui-btn-left sms-btn" href="#" onclick="sendSMS(); return false;" rel="external">
+            </a>
+            <a id="emailbutton" class="ui-btn-right email-btn" href="#" onclick="sendEmail(); return false;" rel="external">
+            </a>
+        </div>
+    </div>
+    <!-- /ui-body wrapper --></div>
 <!-- /page -->
 
 </body>
+
 </html>

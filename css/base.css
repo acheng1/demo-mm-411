@@ -1,0 +1,228 @@
+﻿/* =Global */
+/* reset the default font */
+.ui-body-c, .ui-body-c input, .ui-body-c select, .ui-body-c textarea, .ui-body-c button,
+.ui-btn-up-c, .ui-btn-hover-c, .ui-btn-down-c {
+    font-family: Arial;
+}
+
+.ui-header {
+    border: none;
+    background: none;
+}
+
+.ui-content {
+    padding: 0px;
+}
+
+.ui-footer {
+    border: none;
+    background: none;
+}
+
+.ui-header .ui-btn-left {
+    left: 3px;
+    top: 6px;
+}
+
+.ui-header .ui-btn-right {
+    right: 3px;
+    top: 6px;
+}
+
+div.left {
+    width: 50%;
+    float: left;
+}
+
+div.right {
+    width: 50%;
+    float: right;
+    text-align: right;
+}
+
+/* =Main Page */
+div.logo {
+    background-size: 320px 38px;
+    width: 320px;
+    height: 38px;
+    padding: 0px;
+    margin: 0px;
+}
+
+div.searchbar {
+    background-size: 320px 52px;  
+    width: 320px;
+    height: 52px;
+    padding: 0px;
+    margin: 0px;
+}
+
+#search-form {
+    width: 305px;
+    height: 12px;
+    padding: 6px 0px 0px 8px;
+}
+
+div.ad {
+    background-size: 320px 70px;  
+    width: 320px;
+    height: 70px;
+    border: none;
+}
+
+/* =Results Page */
+#results-container {
+    margin: 8px;
+}
+
+#search-results .ui-corner-all {
+    border-radius: 0.1em; 
+}
+
+.listing-name {
+    font-size: 12pt;
+    color: #0a4c83;
+    font-weight: bold;
+}
+
+.listing-address {
+    font-size: 11pt;
+    color: #6b6b6b;
+}
+
+.listing-distance {
+    font-size: 10pt;
+    color: #9f9e9e;
+}
+
+/* =Details Page */
+a.back-btn-results {
+    background-size: 62px 27px;  
+    width: 62px;
+    height: 27px;
+}
+
+#details {
+    margin: 8px;
+}
+
+.details-name {
+    font-size: 16pt;
+    color: #0b335c;
+    font-weight: bold;
+}
+
+.details-url {
+    font-size: 11pt;
+    font-weight: bold;
+    color: #7c7c7c;
+}
+.details-label {
+    font-size: 8pt;
+    color: #2073ae;
+}
+
+.details-address {
+    font-size: 10pt;
+    color: #353535;
+}
+
+a.connect-me-btn {
+    margin-left: 5px;
+    background-size: 151px 46px;  
+    width: 151px;
+    height: 46px;
+}
+
+a.share-info-btn {
+    margin-right: 5px;
+    background-size: 151px 46px;  
+    width: 151px;
+    height: 46px;
+}
+
+#map {
+    width: 290px; 
+    height: 300px
+}
+
+#directions-panel {
+  height: 100%;
+  width: 290px;
+  overflow: auto;
+  background-color: #FFFFFF;
+} 
+
+/* =Share Page */
+a.back-btn-info {
+    background-size: 42px 27px;  
+    width: 42px;
+    height: 27px;
+}
+
+img.address-pointer {
+    background-size: 10px 15px;  
+    width: 10px;
+    height: 15px;
+}
+
+#share-info {
+    margin: 8px;
+}
+
+#address-select {
+    margin: 8px;
+}
+
+
+div.share-footer {
+    background-size: 320px 60px;  
+    width: 320px;
+    height: 60px;
+    border:none;
+}
+
+.share-name {
+    font-size: 16pt;
+    color: #0b335c;
+    font-weight: bold;
+}
+
+.share-url {
+    font-size: 11pt;
+    font-weight: bold;
+    color: #7c7c7c;
+}
+
+.share-address {
+    font-size: 13pt;
+    font-weight: bold;
+    color: #353535;
+}
+
+.share-contact_name {
+    font-size: 14pt;
+    font-weight: bold;
+    color: #0a4c83;
+}
+
+.share-add_other {
+    font-size: 14pt;
+    font-weight: bold;
+    color: #6b6b6b;
+}
+
+a.sms-btn {
+    margin-top: 8px;
+    background-size: 151px 46px;  
+    width: 151px;
+    height: 46px;
+}
+
+a.email-btn {
+    margin-top: 8px;
+    background-size: 151px 46px;  
+    width: 151px;
+    height: 46px;
+}
+

@@ -73,6 +73,14 @@ function mainpage_init() {
     NativeBridge.getLocation(globalLocationHandler);
 }
 
+function mainpage_show() {
+    setTimeout("displayAd()", 2500);
+}
+
+function displayAd() {
+    $('#ad').attr("class", "ad").trigger('create');
+}
+
 function mainpage_before_show() {
     if (gChangeSearchString != null) {
         $("#searchbar").val(gChangeSearchString);
@@ -300,18 +308,41 @@ function detailspage_show() {
     NativeBridge.setMessage(null);
     NativeBridge.setGrammar(generateDetailsGrammarUrl(), null, detailspage_detailsGrammarHandler);
 
-    var myLatlng = new google.maps.LatLng(gSelectedListing.Latitude, gSelectedListing.Longitude);
+    $('#directions-panel').empty();
+    var directionDisplay;
+    var directionsService = new google.maps.DirectionsService();
+    directionsDisplay = new google.maps.DirectionsRenderer();
+
+    var endLatlng = new google.maps.LatLng(gSelectedListing.Latitude, gSelectedListing.Longitude);
+    var end = gSelectedListing.Address + ',' +
+              gSelectedListing.City + ',' +
+              gSelectedListing.StateOrProvince;
     var myOptions = {
       zoom: 16,
-      center: myLatlng,
+      center: endLatlng,
       mapTypeId: google.maps.MapTypeId.ROADMAP
-    }
+    };
     var map = new google.maps.Map(document.getElementById("map"), myOptions);
     
-    var marker = new google.maps.Marker({
-        position: myLatlng, 
-        map: map
-    });   
+    directionsDisplay.setMap(map);
+    directionsDisplay.setPanel(document.getElementById('directions-panel'));
+
+    //var marker = new google.maps.Marker({
+    //    position: endLatlng, 
+    //    map: map
+    //});   
+
+    var startLatlng = new google.maps.LatLng(gLocation.latitude, gLocation.longitude);
+    var request = {
+        origin: startLatlng,
+        destination: end,
+        travelMode: google.maps.DirectionsTravelMode.DRIVING
+    };
+    directionsService.route(request, function(response, status) {
+        if (status == google.maps.DirectionsStatus.OK) {
+            directionsDisplay.setDirections(response);
+        }
+    });
 }
 
 function detailspage_detailsGrammarHandler(result) {
@@ -392,9 +423,10 @@ function sharepage_before_show() {
               gSelectedListing.Address + ', ' +
               gSelectedListing.City + ', ' +
               gSelectedListing.StateOrProvince).prepend(
-        $('<img>').attr({'src':'images/att/Px411-AddressPointer.png',
-                'width':'10px',
-                'height':'15px'}))).appendTo('#share-listing');
+        $('<img>').attr({'src':'images/transparent.gif',
+                         'width':'1px',
+                         'height':'1px',
+                         'class':'address-pointer'}))).appendTo('#share-listing');
     $('#share-info').trigger('create');
 
     if (gCurrentMeeting == null) {
