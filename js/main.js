@@ -62,8 +62,8 @@ function globalSelectListing(index) {
 // DO NOT CALL THEM FROM OTHER PAGES
 //-----------------------------------------------------------------------------
 function mainpage_init() {
-    NativeBridge.setMessage(null);
-    NativeBridge.setGrammar(null, null, emptyGrammarHandler);
+//    NativeBridge.setMessage(null);
+//    NativeBridge.setGrammar(null, null, emptyGrammarHandler);
 
     var currentTime = (new Date()).getTime();
     //var currentTime = 1334923200000;
@@ -265,8 +265,8 @@ function generateListingGrammarUrl() {
 //-----------------------------------------------------------------------------
 
 function detailspage_init() {
-    NativeBridge.setMessage(null);
-    NativeBridge.setGrammar(null, null, emptyGrammarHandler);
+//    NativeBridge.setMessage(null);
+//    NativeBridge.setGrammar(null, null, emptyGrammarHandler);
 }
 
 function detailspage_before_show() {
@@ -400,8 +400,8 @@ function generateDetailsGrammarUrl() {
 //-----------------------------------------------------------------------------
 
 function sharepage_init() {
-    NativeBridge.setMessage(null);
-    NativeBridge.setGrammar(null, null, emptyGrammarHandler);
+//    NativeBridge.setMessage(null);
+//    NativeBridge.setGrammar(null, null, emptyGrammarHandler);
 }
 
 function sharepage_before_show() {

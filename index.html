@@ -2,42 +2,42 @@
 <html>
 
 <head>
-<title>Enhanced 411</title>
-<meta charset="UTF-8" />
-<meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport" />
-<meta content="yes" name="apple-mobile-web-app-capable" />
-<link rel="stylesheet" type="text/css" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
-<link rel="stylesheet" type="text/css" href="css/base.css" />
-<link rel="stylesheet" type="text/css" href="css/att.css" />
-<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
-<script type="text/javascript" src="common/js/bridge.js"></script>
-<!--<script type="text/javascript" src="common/js/bridge-fake.js"></script>-->
-<script type="text/javascript" src="js/main.js"></script>
-<script type="text/javascript" src="js/util.js">/* Utilities */</script>
-<script type="text/javascript" src="js/latlon.js">/* Latitude/Longitude formula */</script>
-<script type="text/javascript" src="js/geo.js">/* Geodesy representation conversions */</script>
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
-<script type="text/javascript" src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
+  <title>Enhanced 411</title>
+  <meta charset="UTF-8" />
+  <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport" />
+  <meta content="yes" name="apple-mobile-web-app-capable" />
+  <link rel="stylesheet" type="text/css" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
+  <link rel="stylesheet" type="text/css" href="css/base.css" />
+  <link rel="stylesheet" type="text/css" href="css/att.css" />
+  <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+  <script type="text/javascript" src="common/js/bridge.js"></script>
+  <!--<script type="text/javascript" src="common/js/bridge-fake.js"></script>-->
+  <script type="text/javascript" src="js/main.js"></script>
+  <script type="text/javascript" src="js/util.js">/* Utilities */</script>
+  <script type="text/javascript" src="js/latlon.js">/* Latitude/Longitude formula */</script>
+  <script type="text/javascript" src="js/geo.js">/* Geodesy representation conversions */</script>
+  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+  <script type="text/javascript" src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
 </head>
 
 <body onload="load();">
 
 <div id="mainpage" class="mainpage" data-role="page">
     <script type="text/javascript">
-    $("#mainpage").live("pagecreate", function() {
-    $("form").submit(function(event) {
-        event.stopPropagation();
-        event.preventDefault();
+      $("#mainpage").live("pagecreate", function() {
+      $("form").submit(function(event) {
+          event.stopPropagation();
+          event.preventDefault();
 
-        // Do stuff here (usually AJAX);
-        mainpage_BingSearch();
-        document.getElementById("focusLink").focus();
-        return false;
-    });
-    });
-    $("#mainpage").live("pageinit", mainpage_init);
-    $("#mainpage").live("pagebeforeshow", mainpage_before_show);
-    $("#mainpage").live("pageshow", mainpage_show);
+          // Do stuff here (usually AJAX);
+          mainpage_BingSearch();
+          document.getElementById("focusLink").focus();
+          return false;
+      });
+      });
+      $("#mainpage").live("pageinit", mainpage_init);
+      $("#mainpage").live("pagebeforeshow", mainpage_before_show);
+      $("#mainpage").live("pageshow", mainpage_show);
     </script>
     <div data-role="header">
         <div class="logo">
@@ -46,7 +46,7 @@
     <!-- /header -->
     <div data-role="content">
         <div class="searchbar">
-            <form id="search-form" action="">
+            <form id="searchform" action="">
                 <input id="searchbar" name="searchbar" type="search" />
                 <a id="focusLink" href="#"></a>
             </form>
@@ -62,9 +62,9 @@
 <!-- /page -->
 <div id="detailspage" data-role="page">
     <script type="text/javascript">
-    $("#detailspage").live("pageinit", detailspage_init);
-    $("#detailspage").live("pagebeforeshow", detailspage_before_show);
-    $("#detailspage").live("pageshow", detailspage_show);
+      $("#detailspage").live("pageinit", detailspage_init);
+      $("#detailspage").live("pagebeforeshow", detailspage_before_show);
+      $("#detailspage").live("pageshow", detailspage_show);
     </script>
     <div data-role="header">
         <div class="logo">
@@ -95,8 +95,8 @@
 <!-- /page -->
 <div id="sharepage" data-role="page">
     <script type="text/javascript">
-    $("#sharepage").live("pageinit", sharepage_init);
-    $("#sharepage").live("pagebeforeshow", sharepage_before_show);
+      $("#sharepage").live("pageinit", sharepage_init);
+      $("#sharepage").live("pagebeforeshow", sharepage_before_show);
     </script>
     <div data-role="header">
         <div class="logo">
