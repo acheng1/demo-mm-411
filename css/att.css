@@ -1,19 +1,25 @@
 ﻿/* =Global */
 .ui-page {
-    background-image: url("../images/att/Px411-Background-NoSearchBar.png");
+    background-image: url("../images/att/Px411-Background-NoSearchBar-small.png");
+    background-color: #003A6F;
 }
 
 /* =Main Page */
 div.mainpage {
-    background-image: url("../images/att/PX411-Background-SearchBar.png");
+    background-image: url("../images/att/PX411-Background-SearchBar-small.png");
+    background-color: #003A6F;
+}
+
+div.logo-bg {
+	background-image: url("../images/att/Px411-BrandingBackground.png");
 }
 
 div.logo {
-    background-image: url("../images/att/Px411-Branding.png");
+    background-image: url("../images/att/Px411-BrandingLogo.png");
 }
 
 div.searchbar {
-    background-image: url("../images/att/Px411-SearchBar.png");
+    background-image: url("../images/att/Px411-SearchBarBackground.png");
 }
 
 div.ad {

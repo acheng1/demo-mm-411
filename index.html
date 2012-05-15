@@ -10,8 +10,8 @@
   <link rel="stylesheet" type="text/css" href="css/base.css" />
   <link rel="stylesheet" type="text/css" href="css/att.css" />
   <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
-  <script type="text/javascript" src="common/js/bridge.js"></script>
-  <!--<script type="text/javascript" src="common/js/bridge-fake.js"></script>-->
+  <!--<script type="text/javascript" src="common/js/bridge.js"></script>-->
+  <script type="text/javascript" src="common/js/bridge-fake.js"></script>
   <script type="text/javascript" src="js/main.js"></script>
   <script type="text/javascript" src="js/util.js">/* Utilities */</script>
   <script type="text/javascript" src="js/latlon.js">/* Latitude/Longitude formula */</script>
@@ -40,7 +40,8 @@
       $("#mainpage").live("pageshow", mainpage_show);
     </script>
     <div data-role="header">
-        <div class="logo">
+        <div class="logo-bg">
+        	<div class="logo"></div>
         </div>
     </div>
     <!-- /header -->
@@ -67,10 +68,12 @@
       $("#detailspage").live("pageshow", detailspage_show);
     </script>
     <div data-role="header">
-        <div class="logo">
-            <a class="ui-btn-left back-btn-results" href="#mainpage">
-            </a>
-        </div>
+    	<div class="logo-bg">
+	        <div class="logo">
+	            <a class="ui-btn-left back-btn-results" href="#mainpage">
+	            </a>
+	        </div>
+		</div>
     </div>
     <!-- /header -->
     <div data-role="content">
@@ -99,9 +102,11 @@
       $("#sharepage").live("pagebeforeshow", sharepage_before_show);
     </script>
     <div data-role="header">
-        <div class="logo">
-            <a class="ui-btn-left back-btn-info" href="#detailspage"></a>
-        </div>
+    	<div class="logo-bg">
+	        <div class="logo">
+	            <a class="ui-btn-left back-btn-info" href="#detailspage"></a>
+	        </div>
+	    </div>
     </div>
     <!-- /header -->
     <div data-role="content">

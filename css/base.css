@@ -5,6 +5,10 @@
     font-family: Arial;
 }
 
+.ui-page {
+    background-repeat:repeat-x;
+}
+
 .ui-header {
     border: none;
     background: none;
@@ -41,26 +45,33 @@ div.right {
 }
 
 /* =Main Page */
+div.mainpage {
+    background-repeat:repeat-x;
+}
+
+div.logo-bg {
+    height: 38px;
+    margin: 0;
+    padding: 0;
+}
+
 div.logo {
-    background-size: 320px 38px;
-    width: 320px;
+    background-size: 78px 38px;
+    width: 78px;
     height: 38px;
     padding: 0px;
-    margin: 0px;
+    margin: auto;
 }
 
 div.searchbar {
-    background-size: 320px 52px;  
-    width: 320px;
     height: 52px;
     padding: 0px;
     margin: 0px;
 }
 
-#search-form {
-    width: 305px;
+#searchform {
     height: 12px;
-    padding: 6px 0px 0px 8px;
+    padding: 7px 8px 7px 8px;
 }
 
 div.ad {
@@ -174,10 +185,7 @@ img.address-pointer {
     margin: 8px;
 }
 
-
-div.share-footer {
-    background-size: 320px 60px;  
-    width: 320px;
+div.share-footer { 
     height: 60px;
     border:none;
 }
