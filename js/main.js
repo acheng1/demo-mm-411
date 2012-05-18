@@ -22,6 +22,67 @@ var gSharePrecheckIndex = null;
 
 var gRecipientList = [];
 
+var gContactList = [];
+var gMeetingList = [];
+var gMeetingMaxCount = 5;
+var gShareList = [];
+
+//-----------------------------------------------------------------------------
+// HELPERS
+//-----------------------------------------------------------------------------
+var gDayMapping = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+function getShortPeriodString(date1, date2) {
+    var str = gDayMapping[date1.getDay()] + ' ' + getTimeHourString(date1) + ' - ';
+    if (date1.getDay() != date2.getDay()) {
+        str += gDayMapping[date2.getDay()] + ' ';
+    }
+
+    str += getTimeHourString(date2);
+
+    return str;
+}
+
+function getTimeHourString(date) {
+    var h = date.getHours();
+    var m = date.getMinutes();
+
+    var hd = h % 12;
+    hd = (hd == 0) ? 12 : hd;
+    var md = (m < 10) ? '0' + m : m;
+    var s = (h < 12) ? 'am' : 'pm';
+
+    return hd + ((md == '00') ? '' : (':' + md)) + s;
+}
+
+function getTimeRemaining(date) {
+    var now = new Date();
+    var diff = new Date();
+    diff.setTime(date.getTime() - now.getTime());
+    var m = diff.getTime()/60000;
+    return m > 0 ? m : 0;
+}
+
+function isValidMeeting(meeting) {
+    if (!meeting) {
+        return false;
+    }
+
+    if (!meeting.location || meeting.location.match(/[a-z,A-Z]+/) == null) {
+        return false;
+    }
+
+    if (meeting.allDay == 1) {
+        return false;
+    }
+
+    if (meeting.status == "cancelled") {
+        return false;
+    }
+
+    return true;
+}
+
 //-----------------------------------------------------------------------------
 
 $(document).bind("mobileinit",
@@ -74,11 +135,6 @@ function mainpage_init() {
 }
 
 function mainpage_show() {
-    setTimeout("displayAd()", 2500);
-}
-
-function displayAd() {
-    $('#ad').attr("class", "ad").trigger('create');
 }
 
 function mainpage_before_show() {
@@ -111,21 +167,57 @@ function mainpage_before_show() {
 
 function mainpage_calendarHandler(result) {
     if (result != null && result.length > 0) {
+        gMeetingList = result;
         gCurrentMeeting = null;
-        for (var i = 0; i < result.length; i++) {
-            var title = result[i].title;
-            if (title.match(/^\(DEMO\).+/gi) != null) {
-                gCurrentMeeting = result[i];
+
+        $('#meetings-container').empty();
+        $('<ul>').attr({ 'data-role': 'listview', 'data-inset': 'true', 'id': 'meetings' }).appendTo('#meetings-container');
+
+        var count = 0;
+        for (var i = 0; i < gMeetingList.length && count < gMeetingMaxCount; i++) {
+            var m = gMeetingList[i];
+            if (!isValidMeeting(m)) {
+                continue;
+            }
+
+            count++;
+
+            if (gCurrentMeeting == null) {
+                gCurrentMeeting = m;
                 $("#searchbar").val(gCurrentMeeting.location);
                 var msg = "Are you looking for '" + gCurrentMeeting.location + "'?";
                 NativeBridge.setMessage(msg);
                 NativeBridge.playTTS("female", "en-US", msg);
                 NativeBridge.setGrammar(gSearchGrammarRootUrl, null, mainpage_searchGrammarHandler);
-                break;
             }
+
+            var time = getTimeHourString((new Date(m.startDate)));
+            var remaining = getTimeRemaining((new Date(m.startDate)));
+            var remainingContent = remaining > 30 ? '' : (' - ' + remaining + ' minutes from now');
+            $('<li>').append(
+                $('<a>').attr({ 'href': '#', 'onclick': 'mainpage_selectMeeting(' + i + ');return false;'}).append(
+                    $('<span>').attr('class', 'listing-name')
+                        .html(m.title + '<br />').append(
+                            $('<span>').attr('class', 'listing-address')
+                                .html(m.location + '<br />').append(
+                                    $('<span>').attr('class', 'listing-distance')
+                                        .html(time).append(
+                                            $('<span>').attr({'class' : 'listing-distance', 'style' : 'color:red'})
+                                                .html(remainingContent)))))).appendTo("#meetings");
         }
+
+        $('#meetings-container').trigger('create');
     }
 }
+
+function mainpage_selectMeeting(index) {
+    if (index >= 0 && gMeetingList.length > index) {
+       gCurrentMeeting = gMeetingList[index];
+       $("#searchbar").val(gCurrentMeeting.location);
+       $("#searchform").submit();
+    }
+}
+
 
 function mainpage_searchGrammarHandler(result) {
     if (result != null && result.length > 0) {
@@ -202,6 +294,7 @@ function mainpage_BingSearch() {
                 },
                 function (data) {
                     $.mobile.hidePageLoadingMsg();
+                    $('#meetings-container').empty();
                     if (data && data.SearchResponse && data.SearchResponse.Phonebook && data.SearchResponse.Phonebook.Results) {
                         gListings = data.SearchResponse.Phonebook.Results;
                         $('#results-container').empty();
@@ -215,7 +308,7 @@ function mainpage_BingSearch() {
                                         .html(item.Title + '<br />').append(
                                         $('<span>').attr('class', 'listing-address')
                                             .html(item.Address + ', ' +
-                                                  item.City + ', ' + 
+                                                  item.City + ', ' +
                                                   item.StateOrProvince + ' ' +
                                                   item.PostalCode + '<br />').append(
                                             $('<span>').attr('class', 'listing-distance')
@@ -250,7 +343,7 @@ function mainpage_BingSearch() {
 
 function generateListingGrammarUrl() {
     var url = gListingGrammarRootUrl;
-    
+
     if (gListings != null) {
         for (var i = 0; i < gListings.length; i++) {
             var listing = gListings[i];
@@ -323,14 +416,14 @@ function detailspage_show() {
       mapTypeId: google.maps.MapTypeId.ROADMAP
     };
     var map = new google.maps.Map(document.getElementById("map"), myOptions);
-    
+
     directionsDisplay.setMap(map);
     directionsDisplay.setPanel(document.getElementById('directions-panel'));
 
     //var marker = new google.maps.Marker({
-    //    position: endLatlng, 
+    //    position: endLatlng,
     //    map: map
-    //});   
+    //});
 
     var startLatlng = new google.maps.LatLng(gLocation.latitude, gLocation.longitude);
     var request = {
@@ -376,7 +469,7 @@ function detailspage_detailsGrammarHandler(result) {
 
 function generateDetailsGrammarUrl() {
     var url = gDetailsGrammarRootUrl;
-    
+
     if (gListings != null) {
         for (var i = 0; i < gListings.length; i++) {
             var listing = gListings[i];
@@ -450,9 +543,9 @@ function sharepage_before_show() {
     for (var i = 0; i < count; i++) {
         var checked = (gSharePrecheckIndex && gSharePrecheckIndex == i) ? true : false;
         $('<input />').attr({ 'type': 'checkbox',
-                              'checked' : checked, 
-                              'name': 'address', 
-                              'id': 'address' + i, 
+                              'checked' : checked,
+                              'name': 'address',
+                              'id': 'address' + i,
                               "class": "custom",
                               "data-iconpos" : "right"}).appendTo('#addresses');
         $('<label />').attr({ 'for': 'address' + i,
@@ -519,7 +612,7 @@ function sharepage_shareGrammarHandler(result) {
 
 function generateShareGrammarUrl() {
     var url = gShareGrammarRootUrl;
-    
+
     if (gCurrentMeeting != null) {
         var participants = gCurrentMeeting.participants;
         var count = participants.length > gCurrentMeetingMaxParticipants ? gCurrentMeetingMaxParticipants : participants.length;

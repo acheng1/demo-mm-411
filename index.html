@@ -41,7 +41,7 @@
     </script>
     <div data-role="header">
         <div class="logo-bg">
-        	<div class="logo"></div>
+            <div class="logo"></div>
         </div>
     </div>
     <!-- /header -->
@@ -54,12 +54,11 @@
         </div>
         <div id="results-container">
         </div>
-    </div>
-    <div data-position="fixed" data-role="footer">
-        <div id="ad">
+        <div id="meetings-container">
         </div>
     </div>
-    <!-- /ui-body wrapper --></div>
+    <!-- /ui-body wrapper -->
+</div>
 <!-- /page -->
 <div id="detailspage" data-role="page">
     <script type="text/javascript">
@@ -68,12 +67,11 @@
       $("#detailspage").live("pageshow", detailspage_show);
     </script>
     <div data-role="header">
-    	<div class="logo-bg">
-	        <div class="logo">
-	            <a class="ui-btn-left back-btn-results" href="#mainpage">
-	            </a>
-	        </div>
-		</div>
+        <div class="logo-bg">
+            <div class="logo">
+                <a class="ui-btn-left back-btn-results" href="#mainpage"></a>
+            </div>
+        </div>
     </div>
     <!-- /header -->
     <div data-role="content">
@@ -102,11 +100,11 @@
       $("#sharepage").live("pagebeforeshow", sharepage_before_show);
     </script>
     <div data-role="header">
-    	<div class="logo-bg">
-	        <div class="logo">
-	            <a class="ui-btn-left back-btn-info" href="#detailspage"></a>
-	        </div>
-	    </div>
+        <div class="logo-bg">
+            <div class="logo">
+                <a class="ui-btn-left back-btn-info" href="#detailspage"></a>
+            </div>
+        </div>
     </div>
     <!-- /header -->
     <div data-role="content">
@@ -117,10 +115,8 @@
     </div>
     <div data-position="fixed" data-role="footer">
         <div class="share-footer">
-            <a id="smsbutton" class="ui-btn-left sms-btn" href="#" onclick="sendSMS(); return false;" rel="external">
-            </a>
-            <a id="emailbutton" class="ui-btn-right email-btn" href="#" onclick="sendEmail(); return false;" rel="external">
-            </a>
+            <a id="smsbutton" class="ui-btn-left sms-btn" href="#" onclick="sendSMS(); return false;" rel="external"></a>
+            <a id="emailbutton" class="ui-btn-right email-btn" href="#" onclick="sendEmail(); return false;" rel="external"></a>
         </div>
     </div>
     <!-- /ui-body wrapper --></div>
