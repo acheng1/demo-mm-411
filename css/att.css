@@ -25,6 +25,10 @@ a.back-btn-results {
     background-image: url("../images/att/Px411-TopNav-ResultsBackButton.png");
 }
 
+img.calendar-icon {
+    background-image: url("../images/att/Px411-List-CalendarIcon.png");
+}
+
 /* =Details Page */
 a.connect-me-btn {
     background-image: url("../images/att/Px411-Details-ConnectMeButton.png");
@@ -61,6 +65,14 @@ a.departure-alert-btn {
 
 a.share-directions-btn {
     background-image: url("../images/att/Px411-Directions-ShareDirectionsButton.png");
+}
+
+#adp-placemark {
+   background: white url("../images/att/Px411-Directions-StartLocationMarkerIcon.png") no-repeat left center;
+}
+
+.adp-placemark {
+   background: white url("../images/att/Px411-Directions-EndLocationMarkerIcon.png") no-repeat left center;
 }
 
 /* =Share Page */

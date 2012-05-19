@@ -196,14 +196,18 @@ function mainpage_calendarHandler(result) {
             var remainingContent = remaining > 30 ? '' : (' - ' + remaining + ' minutes from now');
             $('<li>').append(
                 $('<a>').attr({ 'href': '#', 'onclick': 'mainpage_selectMeeting(' + i + ');return false;'}).append(
-                    $('<span>').attr('class', 'listing-name')
-                        .html(m.title + '<br />').append(
-                            $('<span>').attr('class', 'listing-address')
-                                .html(m.location + '<br />').append(
-                                    $('<span>').attr('class', 'listing-distance')
-                                        .html(time).append(
-                                            $('<span>').attr({'class' : 'listing-distance', 'style' : 'color:red'})
-                                                .html(remainingContent)))))).appendTo("#meetings");
+                    $('<img>').attr({'src':'images/transparent.gif',
+                                     'width':'1px',
+                                     'height':'1px',
+                                     'class':'ui-li-icon ui-corner-none calendar-icon'})).append(
+                    $('<span>').attr('class', 'meeting-name')
+                        .html(m.title + '<br />')).append(
+                    $('<span>').attr('class', 'meeting-address')
+                        .html(m.location + '<br />')).append(
+                    $('<span>').attr('class', 'meeting-time')
+                        .html(time)).append(
+                    $('<span>').attr({'class' : 'meeting-time', 'style' : 'color:red'})
+                        .html(remainingContent))).appendTo("#meetings");
         }
 
         $('#meetings-container').trigger('create');
@@ -418,9 +422,16 @@ function detailspage_show() {
       streetViewControl: false
     };
     var map = new google.maps.Map(document.getElementById("map"), myOptions);
+
+    var image = new google.maps.MarkerImage('images/Px411-Directions-StartLocationMarkerIcon.png',
+         new google.maps.Size(25, 38),
+         new google.maps.Point(0,0),
+         new google.maps.Point(12, 38));
+
     var marker = new google.maps.Marker({
         position: endLatlng, 
-        map: map
+        map: map,
+        icon: image
     });   
 
     function DirectionsControl(controlDiv, map) {
@@ -544,7 +555,7 @@ function directionspage_show() {
     $('#directions-panel').empty();
     var directionDisplay;
     var directionsService = new google.maps.DirectionsService();
-    directionsDisplay = new google.maps.DirectionsRenderer();
+    directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});
 
     var endLatlng = new google.maps.LatLng(gSelectedListing.Latitude, gSelectedListing.Longitude);
     var end = gSelectedListing.Address + ',' +
@@ -569,13 +580,41 @@ function directionspage_show() {
         destination: end,
         travelMode: google.maps.DirectionsTravelMode.DRIVING
     };
+
+    var icons = {
+        start: new google.maps.MarkerImage(
+         // URL
+         'images/Px411-Directions-StartLocationMarkerIcon.png',
+         // (width,height)
+         new google.maps.Size( 25, 38 ),
+         // The origin point (x,y)
+         new google.maps.Point( 0, 0 ),
+         // The anchor point (x,y)
+         new google.maps.Point( 12, 38 )
+        ),
+        end: new google.maps.MarkerImage(
+         // URL
+         'images/Px411-Directions-EndLocationMarkerIcon.png',
+         // (width,height)
+         new google.maps.Size( 25, 38 ),
+         // The origin point (x,y)
+         new google.maps.Point( 0, 0 ),
+         // The anchor point (x,y)
+         new google.maps.Point( 12, 38 )
+        )
+    };
+
     directionsService.route(request, function(response, status) {
         if (status == google.maps.DirectionsStatus.OK) {
             directionsDisplay.setDirections(response);
+            var leg = response.routes[ 0 ].legs[ 0 ];
+            var marker1 = new google.maps.Marker({position: leg.start_location, map: map, icon: icons.start});
+            var marker2 = new google.maps.Marker({position: leg.end_location,   map: map, icon: icons.end});
         }
     });
 
     //$('#map').addClass('ui-corner-all').trigger('create');
+    $('#directions-panel').addClass('ui-corner-bottom').trigger('create');
 }
 
 function detailspage_detailsGrammarHandler(result) {

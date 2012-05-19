@@ -149,6 +149,32 @@ div.ad {
     border: none;
 }
 
+#meetings-container {
+    margin: 8px;
+}
+
+.meeting-name {
+    font-size: 12pt;
+    color: #0a4c83;
+    font-weight: bold;
+}
+
+.meeting-address {
+    font-size: 11pt;
+    color: #6b6b6b;
+}
+
+.meeting-time {
+    font-size: 10pt;
+    color: #9f9e9e;
+}
+
+img.calendar-icon {
+    background-size: 17px 19px;  
+    width: 17px;
+    height: 19px;
+}
+
 /* =Results Page */
 #results-container {
     margin: 8px;
@@ -309,7 +335,7 @@ div.adp-summary {
 table.adp-placemark {
     border: none;
     margin: 0;
-    background: none;
+    /*background: none;*/
 }
 
 div.adp-legal {
@@ -323,6 +349,20 @@ td.adp-text {
 
 td.adp-substep {
     font-size: 11pt;
+}
+
+#adp-placemark img, .adp-placemark img {
+   display:none;
+}
+
+#adp-placemark {
+   font-weight: bold;
+   padding: 10px 10px 10px 30px;
+}
+
+.adp-placemark {
+   font-weight: bold;
+   padding: 10px 10px 10px 30px;
 }
 
 a.departure-alert-btn {
