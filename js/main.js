@@ -78,7 +78,7 @@ function mainpage_show() {
 }
 
 function displayAd() {
-    $('#ad').attr("class", "ad").trigger('create');
+    $('#ad').addClass("ad").trigger('create');
 }
 
 function mainpage_before_show() {
@@ -211,14 +211,14 @@ function mainpage_BingSearch() {
                             var p2 = new LatLon(Geo.parseDMS(gLocation.latitude), Geo.parseDMS(gLocation.longitude));
                             $('<li>').append(
                                 $('<a>').attr({ 'href': '#detailspage', 'onclick': 'globalSelectListing(' + i + ');return false;'}).append(
-                                    $('<span>').attr('class', 'listing-name')
+                                    $('<span>').addClass('listing-name')
                                         .html(item.Title + '<br />').append(
-                                        $('<span>').attr('class', 'listing-address')
+                                        $('<span>').addClass('listing-address')
                                             .html(item.Address + ', ' +
                                                   item.City + ', ' + 
                                                   item.StateOrProvince + ' ' +
                                                   item.PostalCode + '<br />').append(
-                                            $('<span>').attr('class', 'listing-distance')
+                                            $('<span>').addClass('listing-distance')
                                                 .html((roundNumber(p1.distanceTo(p2)/1.609344, 2)) + ' miles'))))).appendTo("#search-results");
                         });
                         $('#results-container').trigger('create');
@@ -288,15 +288,19 @@ function detailspage_before_show() {
     $('#details').empty();
     $('<ul>').attr({ 'data-role': 'listview', 'data-inset': 'true', 'id': 'details-listing' }).appendTo('#details');
     $('<li>').append(
-      $('<span>').attr('class', 'details-name')
-        .html(gSelectedListing.Title)).appendTo('#details-listing');
+      $('<span>').addClass('details-name')
+        .html(" " + gSelectedListing.Title).prepend(
+        $('<img>').attr({'src':'images/transparent.gif',
+                         'width':'1px',
+                         'height':'1px',
+                         'class':'location-marker'}))).appendTo('#details-listing');
     $('<li>').append(
-      $('<div>').attr('class', 'ui-grid-a').append(
-        $('<div>').attr('class', 'ui-block-a').append(
-          $('<span>').attr('class', 'details-label')
+      $('<div>').addClass('ui-grid-a').append(
+        $('<div>').addClass('ui-block-a').append(
+          $('<span>').addClass('details-label')
             .html('ADDRESS:')),
-        $('<div>').attr('class', 'ui-block-b').append(
-          $('<span>').attr('class', 'details-address')
+        $('<div>').addClass('ui-block-b').append(
+          $('<span>').addClass('details-address')
             .html(gSelectedListing.Address + '<br />' +
                   gSelectedListing.City + ', ' +
                   gSelectedListing.StateOrProvince)))).appendTo('#details-listing');
@@ -308,10 +312,10 @@ function detailspage_show() {
     NativeBridge.setMessage(null);
     NativeBridge.setGrammar(generateDetailsGrammarUrl(), null, detailspage_detailsGrammarHandler);
 
-    $('#directions-panel').empty();
-    var directionDisplay;
-    var directionsService = new google.maps.DirectionsService();
-    directionsDisplay = new google.maps.DirectionsRenderer();
+    //$('#directions-panel').empty();
+    //var directionDisplay;
+    //var directionsService = new google.maps.DirectionsService();
+    //directionsDisplay = new google.maps.DirectionsRenderer();
 
     var endLatlng = new google.maps.LatLng(gSelectedListing.Latitude, gSelectedListing.Longitude);
     var end = gSelectedListing.Address + ',' +
@@ -320,29 +324,66 @@ function detailspage_show() {
     var myOptions = {
       zoom: 16,
       center: endLatlng,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      mapTypeControl: false,
+      zoomControl: false,
+      streetViewControl: false
     };
     var map = new google.maps.Map(document.getElementById("map"), myOptions);
+    var marker = new google.maps.Marker({
+        position: endLatlng, 
+        map: map
+    });   
+
+    function DirectionsControl(controlDiv, map) {
+      var control = document.createElement('img');
+      control.height = '1px';
+      control.width= '1px';
+      control.src = 'images/transparent.gif';
+      control.className = "get-directions-btn";
+      controlDiv.appendChild(control);
     
-    directionsDisplay.setMap(map);
-    directionsDisplay.setPanel(document.getElementById('directions-panel'));
+      google.maps.event.addDomListener(control, 'click', function() {
+        $.mobile.changePage("#directionspage", { transition: "none" });
+      });
+    }
+    
+    function DepartureControl(controlDiv, map) {
+      var control = document.createElement('img');
+      control.height = '1px';
+      control.width= '1px';
+      control.src = 'images/transparent.gif';
+      control.className = "departure-alert-btn";
+      controlDiv.appendChild(control);
+    }
 
-    //var marker = new google.maps.Marker({
-    //    position: endLatlng, 
-    //    map: map
-    //});   
+    //directionsDisplay.setMap(map);
+    //directionsDisplay.setPanel(document.getElementById('directions-panel'));
 
-    var startLatlng = new google.maps.LatLng(gLocation.latitude, gLocation.longitude);
-    var request = {
-        origin: startLatlng,
-        destination: end,
-        travelMode: google.maps.DirectionsTravelMode.DRIVING
-    };
-    directionsService.route(request, function(response, status) {
-        if (status == google.maps.DirectionsStatus.OK) {
-            directionsDisplay.setDirections(response);
-        }
-    });
+    //var startLatlng = new google.maps.LatLng(gLocation.latitude, gLocation.longitude);
+    //var request = {
+    //    origin: startLatlng,
+    //    destination: end,
+    //    travelMode: google.maps.DirectionsTravelMode.DRIVING
+    //};
+    //directionsService.route(request, function(response, status) {
+    //    if (status == google.maps.DirectionsStatus.OK) {
+    //        directionsDisplay.setDirections(response);
+    //    }
+    //});
+
+    // Create the DIV to hold the controls
+    var directionsControlDiv = document.createElement('div');
+    var directionsControl = new DirectionsControl(directionsControlDiv, map);
+    directionsControlDiv.index = 1;
+    map.controls[google.maps.ControlPosition.TOP_LEFT].push(directionsControlDiv);
+
+    var departureControlDiv = document.createElement('div');
+    var departureControl = new DepartureControl(departureControlDiv, map);
+    departureControlDiv.index = 1;
+    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(departureControlDiv);
+
+    $('#map').addClass('ui-corner-all').trigger('create');
 }
 
 function detailspage_detailsGrammarHandler(result) {
@@ -399,6 +440,102 @@ function generateDetailsGrammarUrl() {
 
 //-----------------------------------------------------------------------------
 
+function directionspage_init() {
+//    NativeBridge.setMessage(null);
+//    NativeBridge.setGrammar(null, null, emptyGrammarHandler);
+}
+
+function directionspage_before_show() {
+    $('#directions-details').empty();
+    $('<ul>').attr({ 'data-role': 'listview', 'data-inset': 'true', 'id': 'directions-listing' }).appendTo('#directions-details');
+    $('<li>').append(
+      $('<span>').addClass('directions-name')
+        .html(" " + gSelectedListing.Title + "<br/>"))
+      .append(
+      $('<span>').addClass('directions-address')
+        .html(' ' + gSelectedListing.Address +
+                  gSelectedListing.City + ', ' +
+                  gSelectedListing.StateOrProvince).prepend(
+          $('<img>').attr({'src':'images/transparent.gif',
+                           'width':'1px',
+                           'height':'1px',
+                           'class':'small-location-marker'}))).appendTo('#directions-listing');
+    $('#directions-details').trigger('create');
+    $('#call').attr('href', 'tel:' + gSelectedListing.PhoneNumber.replace(/[^0-9]/g, '')).trigger('create');
+}
+
+function directionspage_show() {
+    NativeBridge.setMessage(null);
+    NativeBridge.setGrammar(generateDetailsGrammarUrl(), null, detailspage_detailsGrammarHandler);
+
+    $('#directions-panel').empty();
+    var directionDisplay;
+    var directionsService = new google.maps.DirectionsService();
+    directionsDisplay = new google.maps.DirectionsRenderer();
+
+    var endLatlng = new google.maps.LatLng(gSelectedListing.Latitude, gSelectedListing.Longitude);
+    var end = gSelectedListing.Address + ',' +
+              gSelectedListing.City + ',' +
+              gSelectedListing.StateOrProvince;
+    var myOptions = {
+      zoom: 16,
+      center: endLatlng,
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      mapTypeControl: false,
+      zoomControl: false,
+      streetViewControl: false
+    };
+    var map = new google.maps.Map(document.getElementById("directions-map"), myOptions);
+
+    directionsDisplay.setMap(map);
+    directionsDisplay.setPanel(document.getElementById('directions-panel'));
+
+    var startLatlng = new google.maps.LatLng(gLocation.latitude, gLocation.longitude);
+    var request = {
+        origin: startLatlng,
+        destination: end,
+        travelMode: google.maps.DirectionsTravelMode.DRIVING
+    };
+    directionsService.route(request, function(response, status) {
+        if (status == google.maps.DirectionsStatus.OK) {
+            directionsDisplay.setDirections(response);
+        }
+    });
+
+    //$('#map').addClass('ui-corner-all').trigger('create');
+}
+
+function detailspage_detailsGrammarHandler(result) {
+    if (result != null && result.length > 0) {
+        var interp = result[0].interpretation;
+        var regexmatch = null;
+        if (interp == "connect") {
+            setTimeout('window.location="' + $("#call").attr("href") + '";', 500);
+            NativeBridge.setGrammar(generateDetailsGrammarUrl(), null, detailspage_detailsGrammarHandler);
+        } else if (interp == "different") {
+            history.back();
+        } else if ((regexmatch = interp.match(/^\d+$/)) != null) {
+            globalSelectListing(regexmatch[0]);
+            $("#detailspage").trigger("pagebeforeshow");
+        } else if ((regexmatch = interp.match(/^no,(.+)/i)) != null) {
+            gChangeSearchString = regexmatch[1];
+            history.back();
+        } else if ((regexmatch = interp.match(/^share,(\d+)/i)) != null) {
+            var idx = regexmatch[1];
+            var participants = gCurrentMeeting.participants;
+            if (idx < participants.length && idx < gCurrentMeetingMaxParticipants) {
+                gSharePrecheckIndex = idx;
+                $.mobile.changePage("#sharepage");
+            }
+        }
+    } else {
+        NativeBridge.setMessage("What?");
+        NativeBridge.setGrammar(gDetailsGrammarRootUrl, null, detailspage_detailsGrammarHandler);
+    }
+}
+
+//-----------------------------------------------------------------------------
+
 function sharepage_init() {
 //    NativeBridge.setMessage(null);
 //    NativeBridge.setGrammar(null, null, emptyGrammarHandler);
@@ -417,9 +554,9 @@ function sharepage_before_show() {
     $('#share-info').empty();
     $('<ul>').attr({ 'data-role': 'listview', 'data-inset': 'true', 'id': 'share-listing' }).appendTo('#share-info');
     $('<li>').append(
-      $('<span>').attr('class', 'share-name')
+      $('<span>').addClass('share-name')
         .html(gSelectedListing.Title + '<br />'),
-      $('<span>').attr('class', 'share-address').html(' ' +
+      $('<span>').addClass('share-address').html(' ' +
               gSelectedListing.Address + ', ' +
               gSelectedListing.City + ', ' +
               gSelectedListing.StateOrProvince).prepend(

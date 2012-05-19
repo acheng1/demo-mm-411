@@ -25,12 +25,12 @@
 
 .ui-header .ui-btn-left {
     left: 3px;
-    top: 6px;
+    top: 9px;
 }
 
 .ui-header .ui-btn-right {
     right: 3px;
-    top: 6px;
+    top: 9px;
 }
 
 div.left {
@@ -44,34 +44,102 @@ div.right {
     text-align: right;
 }
 
+div.logo-bg {
+    height: 45px;
+    margin: 0;
+    padding: 0px;
+}
+
+div.logo {
+    background-size: 70px 32px;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 70px;
+    height: 45px;
+    margin: auto;
+}
+
+div.page-title {
+    padding: 8px;
+    text-align: center;
+    font-family: Arial;
+    text-shadow: none;
+    font-size: 16pt;
+}
+
+/* corner rounding */
+.ui-corner-tl {
+        -moz-border-radius-topleft: 0.3em /*{global-radii-blocks}*/;
+        -webkit-border-top-left-radius: 0.3em /*{global-radii-blocks}*/;
+        border-top-left-radius: 0.3em /*{global-radii-blocks}*/;
+}
+.ui-corner-tr {
+        -moz-border-radius-topright: 0.3em /*{global-radii-blocks}*/;
+        -webkit-border-top-right-radius: 0.3em /*{global-radii-blocks}*/;
+        border-top-right-radius: 0.3em /*{global-radii-blocks}*/;
+}
+.ui-corner-bl {
+        -moz-border-radius-bottomleft: 0.3em /*{global-radii-blocks}*/;
+        -webkit-border-bottom-left-radius: 0.3em /*{global-radii-blocks}*/;
+        border-bottom-left-radius: 0.3em /*{global-radii-blocks}*/;
+}
+.ui-corner-br {
+        -moz-border-radius-bottomright: 0.3em /*{global-radii-blocks}*/;
+        -webkit-border-bottom-right-radius: 0.3em /*{global-radii-blocks}*/;
+        border-bottom-right-radius: 0.3em /*{global-radii-blocks}*/;
+}
+.ui-corner-top {
+        -moz-border-radius-topleft: 0.3em /*{global-radii-blocks}*/;
+        -webkit-border-top-left-radius: 0.3em /*{global-radii-blocks}*/;
+        border-top-left-radius: 0.3em /*{global-radii-blocks}*/;
+        -moz-border-radius-topright: 0.3em /*{global-radii-blocks}*/;
+        -webkit-border-top-right-radius: 0.3em /*{global-radii-blocks}*/;
+        border-top-right-radius: 0.3em /*{global-radii-blocks}*/;
+}
+.ui-corner-bottom {
+        -moz-border-radius-bottomleft: 0.3em /*{global-radii-blocks}*/;
+        -webkit-border-bottom-left-radius: 0.3em /*{global-radii-blocks}*/;
+        border-bottom-left-radius: 0.3em /*{global-radii-blocks}*/;
+        -moz-border-radius-bottomright: 0.3em /*{global-radii-blocks}*/;
+        -webkit-border-bottom-right-radius: 0.3em /*{global-radii-blocks}*/;
+        border-bottom-right-radius: 0.3em /*{global-radii-blocks}*/;
+        }
+.ui-corner-right {
+        -moz-border-radius-topright: 0.3em /*{global-radii-blocks}*/;
+        -webkit-border-top-right-radius: 0.3em /*{global-radii-blocks}*/;
+        border-top-right-radius: 0.3em /*{global-radii-blocks}*/;
+        -moz-border-radius-bottomright: 0.3em /*{global-radii-blocks}*/;
+        -webkit-border-bottom-right-radius: 0.3em /*{global-radii-blocks}*/;
+        border-bottom-right-radius: 0.3em /*{global-radii-blocks}*/;
+}
+.ui-corner-left {
+        -moz-border-radius-topleft: 0.3em /*{global-radii-blocks}*/;
+        -webkit-border-top-left-radius: 0.3em /*{global-radii-blocks}*/;
+        border-top-left-radius: 0.3em /*{global-radii-blocks}*/;
+        -moz-border-radius-bottomleft: 0.3em /*{global-radii-blocks}*/;
+        -webkit-border-bottom-left-radius: 0.3em /*{global-radii-blocks}*/;
+        border-bottom-left-radius: 0.3em /*{global-radii-blocks}*/;
+}
+.ui-corner-all {
+        -moz-border-radius: 0.3em /*{global-radii-blocks}*/;
+        -webkit-border-radius: 0.3em /*{global-radii-blocks}*/;
+        border-radius: 0.3em /*{global-radii-blocks}*/;
+}
+
 /* =Main Page */
 div.mainpage {
     background-repeat:repeat-x;
 }
 
-div.logo-bg {
-    height: 38px;
-    margin: 0;
-    padding: 0;
-}
-
-div.logo {
-    background-size: 78px 38px;
-    width: 78px;
-    height: 38px;
-    padding: 0px;
-    margin: auto;
-}
-
 div.searchbar {
-    height: 52px;
+    height: 45px;
     padding: 0px;
     margin: 0px;
 }
 
 #searchform {
     height: 12px;
-    padding: 7px 8px 7px 8px;
+    padding: 5px 8px 7px 8px;
 }
 
 div.ad {
@@ -138,6 +206,12 @@ a.back-btn-results {
     color: #353535;
 }
 
+img.location-marker {
+    background-size: 11px 18px;  
+    width: 11px;
+    height: 18px;
+}
+
 a.connect-me-btn {
     margin-left: 5px;
     background-size: 151px 46px;  
@@ -153,16 +227,117 @@ a.share-info-btn {
 }
 
 #map {
-    width: 290px; 
+    width: 300px; 
     height: 300px
+}
+
+img.get-directions-btn {
+    background-size: 150px 30px;  
+    width: 150px;
+    height: 30px;
+}
+
+img.departure-alert-btn {
+    background-size: 150px 30px;  
+    width: 150px;
+    height: 30px;
+}
+
+/* =Directions Page */
+#directions-details {
+    margin: 8px 8px 0px 8px;
+}
+
+#directions-listing {
+    margin: 0;
+    border-radius: 0.3em 0.3em 0 0;
+    box-shadow: none;
+    background-clip: border-box;
+    width: 300px;
+}
+
+#directions-listing .ui-li {
+    border: none;
+}
+
+#directions-listing .ui-corner-bottom {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.directions-name {
+    font-size: 16pt;
+    color: #0b335c;
+    font-weight: bold;
+}
+
+.directions-url {
+    font-size: 11pt;
+    font-weight: bold;
+    color: #7c7c7c;
+}
+
+.details-address {
+    font-size: 10pt;
+    color: #353535;
+}
+
+img.small-location-marker {
+    background-size: 10px 15px;  
+    width: 10px;
+    height: 15px;
+}
+
+#directions-map {
+    width: 300px; 
+    height: 150px
 }
 
 #directions-panel {
   height: 100%;
-  width: 290px;
+  width: 300px;
   overflow: auto;
   background-color: #FFFFFF;
 } 
+
+div.adp-summary {
+    background-color: #DDEDF8;
+    font-size: 10pt;
+    padding: 3px;
+}
+
+table.adp-placemark {
+    border: none;
+    margin: 0;
+    background: none;
+}
+
+div.adp-legal {
+    font-size: 8pt;
+}
+
+td.adp-text {
+    font-size: 11pt;
+    font-weight: bold;
+}
+
+td.adp-substep {
+    font-size: 11pt;
+}
+
+a.departure-alert-btn {
+    margin-left: 5px;
+    background-size: 151px 46px;  
+    width: 151px;
+    height: 46px;
+}
+
+a.share-directions-btn {
+    margin-right: 5px;
+    background-size: 152px 46px;  
+    width: 152px;
+    height: 46px;
+}
 
 /* =Share Page */
 a.back-btn-info {
@@ -222,8 +397,8 @@ div.share-footer {
 
 a.sms-btn {
     margin-top: 8px;
-    background-size: 151px 46px;  
-    width: 151px;
+    background-size: 152px 46px;  
+    width: 152px;
     height: 46px;
 }
 

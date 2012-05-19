@@ -1,25 +1,20 @@
 /* =Global */
 .ui-page {
-    background-image: url("../images/att/Px411-Background-NoSearchBar-small.png");
+    background-image: url("../images/att/Px411-Background.png");
     background-color: #003A6F;
 }
 
 /* =Main Page */
-div.mainpage {
-    background-image: url("../images/att/PX411-Background-SearchBar-small.png");
-    background-color: #003A6F;
-}
-
 div.logo-bg {
-	background-image: url("../images/att/Px411-BrandingBackground.png");
+    background-image: url("../images/att/Px411-TopNav-Background.png");
 }
 
 div.logo {
-    background-image: url("../images/att/Px411-BrandingLogo.png");
+    background-image: url("../images/att/Px411-TopNav-Logo.png");
 }
 
 div.searchbar {
-    background-image: url("../images/att/Px411-SearchBarBackground.png");
+    background-image: url("../images/att/Px411-Search-Background.png");
 }
 
 div.ad {
@@ -27,22 +22,46 @@ div.ad {
 }
 
 a.back-btn-results {
-    background-image: url("../images/att/Px411-Button-ResultsBack.png");
+    background-image: url("../images/att/Px411-TopNav-ResultsBackButton.png");
 }
 
 /* =Details Page */
 a.connect-me-btn {
-    background-image: url("../images/att/Px411-Button-ConnectMe.png");
+    background-image: url("../images/att/Px411-Details-ConnectMeButton.png");
 }
 
 a.share-info-btn {
-    background-image: url("../images/att/Px411-Button-ShareInfo.png");
+    background-image: url("../images/att/Px411-Details-ShareInfoButton.png");
 }
 
 a.back-btn-info {
-    background-image: url("../images/att/Px411-Button-InfoBack.png");
+    background-image: url("../images/att/Px411-TopNav-InfoBackButton.png");
 }
 
+img.location-marker {
+    background-image: url("../images/att/Px411-Details-LocationMarkerIcon.png");
+}
+
+img.get-directions-btn {
+    background-image: url("../images/att/Px411-Details-GetDirectionsButton.png");
+}
+
+img.departure-alert-btn {
+    background-image: url("../images/att/Px411-Details-DepartureAlert.png");
+}
+
+/* =Directions Page */
+img.small-location-marker {
+    background-image: url("../images/att/Px411-Directions-SmallLocationMarkerIcon.png");
+}
+
+a.departure-alert-btn {
+    background-image: url("../images/att/Px411-Directions-DepartureAlertButton.png");
+}
+
+a.share-directions-btn {
+    background-image: url("../images/att/Px411-Directions-ShareDirectionsButton.png");
+}
 
 /* =Share Page */
 img.address-pointer {
@@ -54,10 +73,10 @@ img.address-pointer {
 }
 
 a.sms-btn {
-    background-image: url("../images/att/Px411-Button-SendSMS.png");
+    background-image: url("../images/att/Px411-ShareInfo-SendSMSButton.png");
 }
 
 a.email-btn {
-    background-image: url("../images/att/Px411-Button-SendEmail.png");
+    background-image: url("../images/att/Px411-ShareInfo-SendEmailButton.png");
 }
 
