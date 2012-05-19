@@ -67,6 +67,7 @@ a.share-directions-btn {
     background-image: url("../images/att/Px411-Directions-ShareDirectionsButton.png");
 }
 
+/*
 #adp-placemark {
    background: white url("../images/att/Px411-Directions-StartLocationMarkerIcon.png") no-repeat left center;
 }
@@ -74,6 +75,7 @@ a.share-directions-btn {
 .adp-placemark {
    background: white url("../images/att/Px411-Directions-EndLocationMarkerIcon.png") no-repeat left center;
 }
+*/
 
 /* =Share Page */
 img.address-pointer {

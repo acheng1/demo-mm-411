@@ -335,7 +335,6 @@ div.adp-summary {
 table.adp-placemark {
     border: none;
     margin: 0;
-    /*background: none;*/
 }
 
 div.adp-legal {
@@ -358,11 +357,13 @@ td.adp-substep {
 #adp-placemark {
    font-weight: bold;
    padding: 10px 10px 10px 30px;
+   background: white url("../images/Px411-Directions-StartLocationMarkerIcon.png") no-repeat left center;
 }
 
 .adp-placemark {
    font-weight: bold;
    padding: 10px 10px 10px 30px;
+   background: white url("../images/Px411-Directions-EndLocationMarkerIcon.png") no-repeat left center;
 }
 
 a.departure-alert-btn {
