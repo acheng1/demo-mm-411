@@ -17,6 +17,7 @@
   <script type="text/javascript" src="js/latlon.js">/* Latitude/Longitude formula */</script>
   <script type="text/javascript" src="js/geo.js">/* Geodesy representation conversions */</script>
   <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+  <script type="text/javascript" src="js/marker.js">/* Map marker */</script>
   <script type="text/javascript" src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
 </head>
 
@@ -41,7 +42,10 @@
     </script>
     <div data-role="header">
         <div class="logo-bg">
-            <div class="logo"></div>
+            <div class="logo">
+                <a id="list-back-btn" class="ui-btn-left back-btn" 
+                   onclick="mainpage_calendarHandler(gMeetingList); return false;"></a>
+            </div>
         </div>
     </div>
     <!-- /header -->
@@ -138,10 +142,9 @@
     </div>
     <!-- /header -->
     <div data-role="content">
-        <div id="share-info">
-        </div>
-        <div id="address-select">
-        </div>
+        <div id="share-info"></div>
+        <div class="share-list-title"></div>
+        <div id="address-select"></div>
     </div>
     <div data-position="fixed" data-role="footer">
         <div class="share-footer">

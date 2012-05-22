@@ -5,10 +5,11 @@ var gBingSearchRadius = "25.0";
 var gBingSearchNumResults = 10;
 
 var gResourceRootUrl = "http://ec2-184-72-7-75.us-west-1.compute.amazonaws.com/";
-var gGrammarRootUrl = gResourceRootUrl + "perl/mobilehost/grammars/dynamicgram.pl";
+var gGrammarRootUrl = gResourceRootUrl + "perl/demo-411-tmp/grammars/dynamicgram.pl";
 var gSearchGrammarRootUrl = gGrammarRootUrl + "?type=search";
 var gListingGrammarRootUrl = gGrammarRootUrl + "?type=listing";
 var gDetailsGrammarRootUrl = gGrammarRootUrl + "?type=details";
+var gDirectionsGrammarRootUrl = gGrammarRootUrl + "?type=directions";
 var gShareGrammarRootUrl = gGrammarRootUrl + "?type=share";
 var gCurrentMeeting = null;
 var gCurrentMeetingMaxParticipants = 15;
@@ -132,6 +133,9 @@ function mainpage_init() {
     NativeBridge.getEvents(currentTime, endTime, mainpage_calendarHandler);
 
     NativeBridge.getLocation(globalLocationHandler);
+
+    // hide back button
+    $('#list-back-btn').hide();
 }
 
 function mainpage_show() {
@@ -170,6 +174,11 @@ function mainpage_calendarHandler(result) {
         gMeetingList = result;
         gCurrentMeeting = null;
 
+        // clear results container to handle go back
+        $('#results-container').empty();
+        // hide back button
+        $('#list-back-btn').hide();
+
         $('#meetings-container').empty();
         $('<ul>').attr({ 'data-role': 'listview', 'data-inset': 'true', 'id': 'meetings' }).appendTo('#meetings-container');
 
@@ -193,7 +202,8 @@ function mainpage_calendarHandler(result) {
 
             var time = getTimeHourString((new Date(m.startDate)));
             var remaining = getTimeRemaining((new Date(m.startDate)));
-            var remainingContent = remaining > 30 ? '' : (' - ' + remaining + ' minutes from now');
+            var remainingContent = remaining > 30 ? '' : (remaining + ' minutes from now');
+            var includeDash = remaining > 30 ? '' : ' - ';
             $('<li>').append(
                 $('<a>').attr({ 'href': '#', 'onclick': 'mainpage_selectMeeting(' + i + ');return false;'}).append(
                     $('<img>').attr({'src':'images/transparent.gif',
@@ -205,7 +215,7 @@ function mainpage_calendarHandler(result) {
                     $('<span>').attr('class', 'meeting-address')
                         .html(m.location + '<br />')).append(
                     $('<span>').attr('class', 'meeting-time')
-                        .html(time)).append(
+                        .html(time + includeDash)).append(
                     $('<span>').attr({'class' : 'meeting-time', 'style' : 'color:red'})
                         .html(remainingContent))).appendTo("#meetings");
         }
@@ -298,7 +308,13 @@ function mainpage_BingSearch() {
                 },
                 function (data) {
                     $.mobile.hidePageLoadingMsg();
+                    // empty meetings container
                     $('#meetings-container').empty();
+                    // show back button
+                    if (gCurrentMeeting) {
+                        $('#list-back-btn').show();
+                    }
+
                     if (data && data.SearchResponse && data.SearchResponse.Phonebook && data.SearchResponse.Phonebook.Results) {
                         gListings = data.SearchResponse.Phonebook.Results;
                         $('#results-container').empty();
@@ -308,15 +324,19 @@ function mainpage_BingSearch() {
                             var p2 = new LatLon(Geo.parseDMS(gLocation.latitude), Geo.parseDMS(gLocation.longitude));
                             $('<li>').append(
                                 $('<a>').attr({ 'href': '#detailspage', 'onclick': 'globalSelectListing(' + i + ');return false;'}).append(
+                                    $('<img>').attr({'src':'images/transparent.gif',
+                                                     'width':'1px',
+                                                     'height':'1px',
+                                                     'class':'ui-li-icon ui-corner-none list-location-marker'})).append(
                                     $('<span>').addClass('listing-name')
-                                        .html(item.Title + '<br />').append(
-                                        $('<span>').addClass('listing-address')
-                                            .html(item.Address + ', ' +
-                                                  item.City + ', ' +
-                                                  item.StateOrProvince + ' ' +
-                                                  item.PostalCode + '<br />').append(
-                                            $('<span>').addClass('listing-distance')
-                                                .html((roundNumber(p1.distanceTo(p2)/1.609344, 2)) + ' miles'))))).appendTo("#search-results");
+                                        .html(item.Title + '<br />')).append(
+                                    $('<span>').addClass('listing-address')
+                                        .html(item.Address + ', ' +
+                                              item.City + ', ' +
+                                              item.StateOrProvince + ' ' +
+                                              item.PostalCode + '<br />')).append(
+                                    $('<span>').addClass('listing-distance')
+                                        .html('Approx. ' + (roundNumber(p1.distanceTo(p2)/1.609344, 2)) + ' miles'))).appendTo("#search-results");
                         });
                         $('#results-container').trigger('create');
 
@@ -390,7 +410,7 @@ function detailspage_before_show() {
         $('<img>').attr({'src':'images/transparent.gif',
                          'width':'1px',
                          'height':'1px',
-                         'class':'location-marker'}))).appendTo('#details-listing');
+                         'class':'details-location-marker'}))).appendTo('#details-listing');
     $('<li>').append(
       $('<div>').addClass('ui-grid-a').append(
         $('<div>').addClass('ui-block-a').append(
@@ -423,16 +443,19 @@ function detailspage_show() {
     };
     var map = new google.maps.Map(document.getElementById("map"), myOptions);
 
-    var image = new google.maps.MarkerImage('images/Px411-Directions-StartLocationMarkerIcon.png',
-         new google.maps.Size(25, 38),
-         new google.maps.Point(0,0),
-         new google.maps.Point(12, 38));
+    var transparent = new google.maps.MarkerImage('images/transparent.png',
+         new google.maps.Size(1, 1));
 
     var marker = new google.maps.Marker({
         position: endLatlng, 
         map: map,
-        icon: image
+        icon: transparent 
     });   
+
+    var customMarker = new Marker({
+      map: map
+    }, 'details-map-marker');
+    customMarker.bindTo('position', marker, 'position');
 
     function DirectionsControl(controlDiv, map) {
       var control = document.createElement('img');
@@ -443,7 +466,7 @@ function detailspage_show() {
       controlDiv.appendChild(control);
     
       google.maps.event.addDomListener(control, 'click', function() {
-        $.mobile.changePage("#directionspage", { transition: "none" });
+        $.mobile.changePage("#directionspage");
       });
     }
     
@@ -479,6 +502,8 @@ function detailspage_detailsGrammarHandler(result) {
             NativeBridge.setGrammar(generateDetailsGrammarUrl(), null, detailspage_detailsGrammarHandler);
         } else if (interp == "different") {
             history.back();
+        } else if (interp == "directions") {
+            $.mobile.changePage("#directionspage");
         } else if ((regexmatch = interp.match(/^\d+$/)) != null) {
             globalSelectListing(regexmatch[0]);
             $("#detailspage").trigger("pagebeforeshow");
@@ -550,7 +575,7 @@ function directionspage_before_show() {
 
 function directionspage_show() {
     NativeBridge.setMessage(null);
-    NativeBridge.setGrammar(generateDetailsGrammarUrl(), null, detailspage_detailsGrammarHandler);
+    NativeBridge.setGrammar(gDirectionsGrammarRootUrl, null, directionspage_directionsGrammarHandler);
 
     $('#directions-panel').empty();
     var directionDisplay;
@@ -581,68 +606,40 @@ function directionspage_show() {
         travelMode: google.maps.DirectionsTravelMode.DRIVING
     };
 
-    var icons = {
-        start: new google.maps.MarkerImage(
-         // URL
-         'images/Px411-Directions-StartLocationMarkerIcon.png',
-         // (width,height)
-         new google.maps.Size( 25, 38 ),
-         // The origin point (x,y)
-         new google.maps.Point( 0, 0 ),
-         // The anchor point (x,y)
-         new google.maps.Point( 12, 38 )
-        ),
-        end: new google.maps.MarkerImage(
-         // URL
-         'images/Px411-Directions-EndLocationMarkerIcon.png',
-         // (width,height)
-         new google.maps.Size( 25, 38 ),
-         // The origin point (x,y)
-         new google.maps.Point( 0, 0 ),
-         // The anchor point (x,y)
-         new google.maps.Point( 12, 38 )
-        )
-    };
+    var transparent = new google.maps.MarkerImage('images/transparent.png',
+         new google.maps.Size(1, 1));
 
     directionsService.route(request, function(response, status) {
         if (status == google.maps.DirectionsStatus.OK) {
             directionsDisplay.setDirections(response);
             var leg = response.routes[ 0 ].legs[ 0 ];
-            var marker1 = new google.maps.Marker({position: leg.start_location, map: map, icon: icons.start});
-            var marker2 = new google.maps.Marker({position: leg.end_location,   map: map, icon: icons.end});
+            var startMarker = new google.maps.Marker({position: leg.start_location, map: map, icon: transparent});
+            var endMarker = new google.maps.Marker({position: leg.end_location,   map: map, icon: transparent});
+
+            var startCustomMarker = new Marker({
+              map: map
+            }, 'directions-start-map-marker');
+            startCustomMarker.bindTo('position', startMarker, 'position');
+
+            var endCustomMarker = new Marker({
+              map: map
+            }, 'directions-end-map-marker');
+            endCustomMarker.bindTo('position', endMarker, 'position');
         }
     });
 
-    //$('#map').addClass('ui-corner-all').trigger('create');
     $('#directions-panel').addClass('ui-corner-bottom').trigger('create');
 }
 
-function detailspage_detailsGrammarHandler(result) {
+function directionspage_directionsGrammarHandler(result) {
     if (result != null && result.length > 0) {
         var interp = result[0].interpretation;
-        var regexmatch = null;
-        if (interp == "connect") {
-            setTimeout('window.location="' + $("#call").attr("href") + '";', 500);
-            NativeBridge.setGrammar(generateDetailsGrammarUrl(), null, detailspage_detailsGrammarHandler);
-        } else if (interp == "different") {
-            history.back();
-        } else if ((regexmatch = interp.match(/^\d+$/)) != null) {
-            globalSelectListing(regexmatch[0]);
-            $("#detailspage").trigger("pagebeforeshow");
-        } else if ((regexmatch = interp.match(/^no,(.+)/i)) != null) {
-            gChangeSearchString = regexmatch[1];
-            history.back();
-        } else if ((regexmatch = interp.match(/^share,(\d+)/i)) != null) {
-            var idx = regexmatch[1];
-            var participants = gCurrentMeeting.participants;
-            if (idx < participants.length && idx < gCurrentMeetingMaxParticipants) {
-                gSharePrecheckIndex = idx;
-                $.mobile.changePage("#sharepage");
-            }
+        if (interp == "share") {
+            $.mobile.changePage("#sharepage");
         }
     } else {
         NativeBridge.setMessage("What?");
-        NativeBridge.setGrammar(gDetailsGrammarRootUrl, null, detailspage_detailsGrammarHandler);
+        NativeBridge.setGrammar(gDirectionsGrammarRootUrl, null, directionspage_directionsGrammarHandler);
     }
 }
 
@@ -654,10 +651,6 @@ function sharepage_init() {
 }
 
 function sharepage_before_show() {
-    //NativeBridge.setMessage("Who do you want to share with?");
-    NativeBridge.setMessage(null);
-    NativeBridge.setGrammar(generateShareGrammarUrl(), null, sharepage_shareGrammarHandler);
-
     if (gSelectedListing == null) {
         $('#info').html("No information");
         return;
@@ -676,7 +669,25 @@ function sharepage_before_show() {
                          'width':'1px',
                          'height':'1px',
                          'class':'address-pointer'}))).appendTo('#share-listing');
+
+    if (gCurrentMeeting != null) {
+        var time = getTimeHourString((new Date(gCurrentMeeting.startDate)));
+        $('<li>').addClass('share-meeting-bg').append(
+          $('<span>').addClass('share-meeting-name')
+            .html(gCurrentMeeting.title)).append(
+          $('<span>').addClass('share-meeting-time')
+            .html(time)).appendTo('#share-listing');
+
+        $('div.share-list-title').html('Meeting Attendees');
+    } else {
+        $('div.share-list-title').html('Suggested Attendees');
+    }
+
     $('#share-info').trigger('create');
+
+    //NativeBridge.setMessage("Who do you want to share with?");
+    NativeBridge.setMessage(null);
+    NativeBridge.setGrammar(generateShareGrammarUrl(), null, sharepage_shareGrammarHandler);
 
     if (gCurrentMeeting == null) {
         alert("no meeting!");
@@ -698,6 +709,7 @@ function sharepage_before_show() {
     }
     for (var i = 0; i < count; i++) {
         var checked = (gSharePrecheckIndex && gSharePrecheckIndex == i) ? true : false;
+        var checkedClass = checked ? 'share-contact_name-selected' : 'share-contact_name';
         $('<input />').attr({ 'type': 'checkbox',
                               'checked' : checked,
                               'name': 'address',
@@ -705,7 +717,15 @@ function sharepage_before_show() {
                               "class": "custom",
                               "data-iconpos" : "right"}).appendTo('#addresses');
         $('<label />').attr({ 'for': 'address' + i,
-                              'class': 'share-contact_name'}).text(participants[i].name).appendTo('#addresses');
+                              'id': 'address-label' + i,
+                              'class': checkedClass}).text(participants[i].name).appendTo('#addresses');
+
+        $('#address' + i).change(function () {
+             var inputId = $(this).attr('id');
+             var isChecked = $(this).is(":checked");
+             $("label[for='" + inputId + "']").toggleClass("share-contact_name-selected", isChecked);
+             $("label[for='" + inputId + "']").toggleClass("share-contact_name", !isChecked);
+        });
     }
     $('<input />').attr({ 'type': 'checkbox',
                           'data-icon' : 'plus',
@@ -718,8 +738,7 @@ function sharepage_before_show() {
     $('#address-select').trigger('create');
 
     $("#address_all").change(function () {
-        var checked_status = this.checked;
-        $("input[name=address]").attr("checked", checked_status).checkboxradio("refresh");
+        $("input[name=address]").attr("checked", $(this).is(":checked")).checkboxradio("refresh");
     });
 }
 
@@ -811,7 +830,7 @@ function sendEmail() {
                 gSelectedListing.Address + ', ' +
                 gSelectedListing.City + ', ' +
                 gSelectedListing.StateOrProvince;
-    var subject = gCurrentMeeting.title;
+    var subject = gCurrentMeeting ? gCurrentMeeting.title : gSelectedListing.Title;
     if (gRecipientList.length) {
       NativeBridge.sendMail(gRecipientList, subject, body);
     } else {
