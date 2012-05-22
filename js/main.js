@@ -60,7 +60,7 @@ function getTimeRemaining(date) {
     var now = new Date();
     var diff = new Date();
     diff.setTime(date.getTime() - now.getTime());
-    var m = diff.getTime()/60000;
+    var m = Math.ceil(diff.getTime()/60000);
     return m > 0 ? m : 0;
 }
 
@@ -202,7 +202,14 @@ function mainpage_calendarHandler(result) {
 
             var time = getTimeHourString((new Date(m.startDate)));
             var remaining = getTimeRemaining((new Date(m.startDate)));
-            var remainingContent = remaining > 30 ? '' : (remaining + ' minutes from now');
+            var remainingContent = '';
+            if (remaining == 0) {
+                remainingContent = 'now';
+            } else if (remaining == 1) {
+                remainingContent = '1 minute from now';
+            } else if (remaining <= 30) {
+                remainingContent = (remaining + ' minutes from now');
+            }
             var includeDash = remaining > 30 ? '' : ' - ';
             $('<li>').append(
                 $('<a>').attr({ 'href': '#', 'onclick': 'mainpage_selectMeeting(' + i + ');return false;'}).append(
