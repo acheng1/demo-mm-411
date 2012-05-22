@@ -33,6 +33,22 @@
     top: 9px;
 }
 
+.ui-icon-arrow-r {
+    background: #FFFFFF;
+    background: transparent;
+    background-repeat: no-repeat;
+    border-radius: 0;
+}
+
+.ui-icon-delete {
+    background: #FFFFFF;
+    background: transparent;
+    background-repeat: no-repeat;
+    border-radius: 0;
+    height: 19px;
+    width: 19px;
+}
+
 div.left {
     width: 50%;
     float: left;
@@ -162,11 +178,13 @@ div.ad {
 .meeting-address {
     font-size: 11pt;
     color: #6b6b6b;
+    font-weight: normal;
 }
 
 .meeting-time {
     font-size: 10pt;
     color: #9f9e9e;
+    font-weight: normal;
 }
 
 img.calendar-icon {
@@ -184,6 +202,18 @@ img.calendar-icon {
     border-radius: 0.1em; 
 }
 
+a.back-btn {
+    background-size: 48px 27px;  
+    width: 48px;
+    height: 27px;
+}
+
+img.list-location-marker {
+    background-size: 12px 20px;  
+    width: 12px;
+    height: 20px;
+}
+
 .listing-name {
     font-size: 12pt;
     color: #0a4c83;
@@ -193,11 +223,13 @@ img.calendar-icon {
 .listing-address {
     font-size: 11pt;
     color: #6b6b6b;
+    font-weight: normal;
 }
 
 .listing-distance {
     font-size: 10pt;
     color: #9f9e9e;
+    font-weight: normal;
 }
 
 /* =Details Page */
@@ -232,10 +264,21 @@ a.back-btn-results {
     color: #353535;
 }
 
-img.location-marker {
+img.details-location-marker {
     background-size: 11px 18px;  
     width: 11px;
     height: 18px;
+}
+
+img.details-map-marker {
+    position: relative; 
+    left: -50%; 
+    top: -26px;
+    padding: 12px;
+    background-color: transparent;
+    height: 38px;
+    width: 25px;
+    background-repeat: no-repeat;
 }
 
 a.connect-me-btn {
@@ -303,7 +346,7 @@ img.departure-alert-btn {
     color: #7c7c7c;
 }
 
-.details-address {
+.directions-address {
     font-size: 10pt;
     color: #353535;
 }
@@ -325,6 +368,28 @@ img.small-location-marker {
   overflow: auto;
   background-color: #FFFFFF;
 } 
+
+img.directions-start-map-marker {
+    position: relative; 
+    left: -50%; 
+    top: -26px;
+    padding: 12px;
+    background-color: transparent;
+    height: 38px;
+    width: 25px;
+    background-repeat: no-repeat;
+}
+
+img.directions-end-map-marker {
+    position: relative; 
+    left: -50%; 
+    top: -26px;
+    padding: 12px;
+    background-color: transparent;
+    height: 38px;
+    width: 25px;
+    background-repeat: no-repeat;
+}
 
 div.adp-summary {
     background-color: #DDEDF8;
@@ -351,19 +416,23 @@ td.adp-substep {
 }
 
 #adp-placemark img, .adp-placemark img {
-   display:none;
+    display:none;
 }
 
 #adp-placemark {
-   font-weight: bold;
-   padding: 10px 10px 10px 30px;
-   background: white url("../images/Px411-Directions-StartLocationMarkerIcon.png") no-repeat left center;
+    font-weight: bold;
+    padding: 10px 10px 10px 30px;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: 5px 10px;
 }
 
 .adp-placemark {
-   font-weight: bold;
-   padding: 10px 10px 10px 30px;
-   background: white url("../images/Px411-Directions-EndLocationMarkerIcon.png") no-repeat left center;
+    font-weight: bold;
+    padding: 10px 10px 10px 30px;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: 5px 10px;
 }
 
 a.departure-alert-btn {
@@ -397,6 +466,11 @@ img.address-pointer {
     margin: 8px;
 }
 
+#share-listing .ui-li {
+    border: none;
+    overflow: auto;
+}
+
 #address-select {
     margin: 8px;
 }
@@ -419,15 +493,47 @@ div.share-footer {
 }
 
 .share-address {
-    font-size: 13pt;
+    font-size: 10pt;
     font-weight: bold;
     color: #353535;
+}
+
+.share-meeting-bg {
+    background: #ddedf8;
+}
+
+.share-meeting-name {
+    font-size: 10pt;
+    font-weight: bold;
+    color: #0a4c83;
+    float: left;
+}
+
+.share-meeting-time {
+    font-size: 10pt;
+    font-weight: normal;
+    color: #353535;
+    float: right;
+}
+
+.share-list-title {
+    padding: 0 3px 3px 3px;
+    text-align: center;
+    font-size: 16pt;
+    font-weight: normal;
+    color: #FFFFFF;
+}
+
+.share-contact_name-selected {
+    font-size: 14pt;
+    font-weight: bold;
+    color: #0a4c83;
 }
 
 .share-contact_name {
     font-size: 14pt;
     font-weight: bold;
-    color: #0a4c83;
+    color: #8f8f8f;
 }
 
 .share-add_other {

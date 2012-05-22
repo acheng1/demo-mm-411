@@ -4,6 +4,14 @@
     background-color: #003A6F;
 }
 
+.ui-icon-arrow-r {
+    background-image: url("../images/att/Px411-List-DetailsRightArrow.png");
+}
+
+.ui-icon-delete {
+    background-image: url("../images/att/Px411-Search-DeleteX.png");
+}
+
 /* =Main Page */
 div.logo-bg {
     background-image: url("../images/att/Px411-TopNav-Background.png");
@@ -17,16 +25,21 @@ div.searchbar {
     background-image: url("../images/att/Px411-Search-Background.png");
 }
 
-div.ad {
-    background-image: url("../images/att/Px411-BannerAd-CheesecakeFactory-Smaller.png");
-}
-
 a.back-btn-results {
     background-image: url("../images/att/Px411-TopNav-ResultsBackButton.png");
 }
 
 img.calendar-icon {
     background-image: url("../images/att/Px411-List-CalendarIcon.png");
+}
+
+/* =Results Page */
+a.back-btn {
+    background-image: url("../images/att/Px411-TopNav-BackButton.png");
+}
+
+img.list-location-marker {
+    background-image: url("../images/att/Px411-List-LocationMarkerIcon.png");
 }
 
 /* =Details Page */
@@ -42,8 +55,12 @@ a.back-btn-info {
     background-image: url("../images/att/Px411-TopNav-InfoBackButton.png");
 }
 
-img.location-marker {
+img.details-location-marker {
     background-image: url("../images/att/Px411-Details-LocationMarkerIcon.png");
+}
+
+img.details-map-marker {
+   background-image: url("../images/att/Px411-Details-MapLocationMarkerIcon.png");
 }
 
 img.get-directions-btn {
@@ -57,6 +74,22 @@ img.departure-alert-btn {
 /* =Directions Page */
 img.small-location-marker {
     background-image: url("../images/att/Px411-Directions-SmallLocationMarkerIcon.png");
+}
+
+img.directions-start-map-marker {
+   background-image: url("../images/att/Px411-Directions-StartLocationMarkerIcon.png");
+}
+
+img.directions-end-map-marker {
+   background-image: url("../images/att/Px411-Directions-EndLocationMarkerIcon.png");
+}
+
+#adp-placemark {
+   background-image: url("../images/att/Px411-Directions-StartLocationMarkerIcon.png");
+}
+
+.adp-placemark {
+   background-image: url("../images/att/Px411-Directions-EndLocationMarkerIcon.png");
 }
 
 a.departure-alert-btn {
