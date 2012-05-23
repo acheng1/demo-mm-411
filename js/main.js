@@ -12,6 +12,7 @@ var gDetailsGrammarRootUrl = gGrammarRootUrl + "?type=details";
 var gDirectionsGrammarRootUrl = gGrammarRootUrl + "?type=directions";
 var gShareGrammarRootUrl = gGrammarRootUrl + "?type=share";
 var gCurrentMeeting = null;
+var gUseSuggested = false;
 var gCurrentMeetingMaxParticipants = 15;
 
 var gLocation = null;
@@ -256,8 +257,7 @@ function mainpage_searchGrammarHandler(result) {
             $("#searchbar").val($("#searchbar").val() + ", " + regexmatch[1]);
             $("#searchform").submit();
         } else if ((regexmatch = interp.match(/^no,(.+)/i)) != null) {
-            // clear the current meeting
-            gCurrentMeeting = null;
+            gUseSuggested = true;
 
             $("#searchbar").val(regexmatch[1]);
             $("#searchform").submit();
@@ -681,7 +681,9 @@ function sharepage_before_show() {
                          'height':'1px',
                          'class':'address-pointer'}))).appendTo('#share-listing');
 
-    if (gCurrentMeeting != null) {
+    if (gUseSuggested) {
+        $('div.share-list-title').html('Suggested Attendees');
+    } else {
         var time = getTimeHourString((new Date(gCurrentMeeting.startDate)));
         $('<li>').addClass('share-meeting-bg').append(
           $('<span>').addClass('share-meeting-name')
@@ -690,8 +692,6 @@ function sharepage_before_show() {
             .html(time)).appendTo('#share-listing');
 
         $('div.share-list-title').html('Meeting Attendees');
-    } else {
-        $('div.share-list-title').html('Suggested Attendees');
     }
 
     $('#share-info').trigger('create');
@@ -700,13 +700,13 @@ function sharepage_before_show() {
     NativeBridge.setMessage(null);
     NativeBridge.setGrammar(generateShareGrammarUrl(), null, sharepage_shareGrammarHandler);
 
-    if (gCurrentMeeting == null) {
-        alert("no meeting!");
-        $('#address-select').empty();
-        $('#address-select').html("No meeting");
-        $('#address-select').trigger("create");
-        return;
-    }
+    //if (gCurrentMeeting == null) {
+    //    alert("no meeting!");
+    //    $('#address-select').empty();
+    //    $('#address-select').html("No meeting");
+    //    $('#address-select').trigger("create");
+    //    return;
+    //}
 
     $('#address-select').empty();
     $('<input />').attr({'id' : 'address_all', 'class' : 'custom', 'name' : 'address_all', 'type' : 'checkbox'}).appendTo('#address-select');
@@ -841,7 +841,7 @@ function sendEmail() {
                 gSelectedListing.Address + ', ' +
                 gSelectedListing.City + ', ' +
                 gSelectedListing.StateOrProvince;
-    var subject = gCurrentMeeting ? gCurrentMeeting.title : gSelectedListing.Title;
+    var subject = gUseSuggested ? gSelectedListing.Title : gCurrentMeeting.title;
     if (gRecipientList.length) {
       NativeBridge.sendMail(gRecipientList, subject, body);
     } else {
