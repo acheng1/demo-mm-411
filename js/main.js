@@ -249,6 +249,9 @@ function mainpage_searchGrammarHandler(result) {
             $("#searchbar").val($("#searchbar").val() + ", " + regexmatch[1]);
             $("#searchform").submit();
         } else if ((regexmatch = interp.match(/^no,(.+)/i)) != null) {
+            // clear the current meeting
+            gCurrentMeeting = null;
+
             $("#searchbar").val(regexmatch[1]);
             $("#searchform").submit();
         } else {

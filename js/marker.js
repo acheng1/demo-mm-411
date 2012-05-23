@@ -6,7 +6,7 @@ function Marker(opt_options, className) {
    
     var div = this.div_ = document.createElement('div');
     div.appendChild(img);
-    div.style.cssText = 'position: absolute; display: none';
+    div.style.cssText = 'position: absolute; display: none;';
 };
 Marker.prototype = new google.maps.OverlayView;
 
