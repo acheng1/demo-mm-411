@@ -21,6 +21,8 @@ div.logo-bg {
 
 div.logo {
     background-image: url("../images/att/Px411-TopNav-Logo.png");
+    width: 70px;
+    height: 45px;
 }
 
 div.searchbar {
@@ -46,7 +48,9 @@ img.list-location-marker {
 
 /* =Details Page */
 a.connect-me-btn {
-    background-image: url("../images/att/Px411-Details-ConnectMeButton.png");
+    background-image: url("../images/att/Px411-Button-ConnectMe.png");
+    /*background-image:
+     * url("../images/att/Px411-Details-ConnectMeButton.png");*/
 }
 
 a.share-info-btn {

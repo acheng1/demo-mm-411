@@ -58,11 +58,8 @@ div.logo-bg {
 }
 
 div.logo {
-    background-size: 70px 32px;
     background-repeat: no-repeat;
     background-position: center;
-    width: 70px;
-    height: 45px;
     margin: auto;
 }
 
@@ -148,13 +145,6 @@ div.searchbar {
 #searchform {
     height: 12px;
     padding: 5px 8px 7px 8px;
-}
-
-div.ad {
-    background-size: 320px 70px;  
-    width: 320px;
-    height: 70px;
-    border: none;
 }
 
 #meetings-container {
