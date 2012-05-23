@@ -9,6 +9,13 @@
     background-repeat:repeat-x;
 }
 
+.ui-icon-custom-arrow-r {
+    background: none;
+    background-repeat: no-repeat;
+    height: 17px;
+    width: 11px;
+}
+
 .ui-header {
     border: none;
     background: none;
@@ -31,120 +38,6 @@
 .ui-header .ui-btn-right {
     right: 3px;
     top: 9px;
-}
-
-.ui-icon,
-.ui-icon-searchfield:after {
-    background: #FFFFFF /*{global-icon-color}*/;
-    background: transparent /*{global-icon-disc}*/;
-    background-image: url("../images/icons-18-grey.png") /*{global-icon-set}*/;
-    background-repeat: no-repeat;
-    -moz-border-radius: 9px;
-    -webkit-border-radius: 9px;
-    border-radius: 9px;
-}
-
-.ui-icon-alt {
-    background: #fff;
-    background: rgba(255,255,255,.3);
-    background-image: url("../images/icons-18-grey.png");
-    background-repeat: no-repeat;
-}
-
-/* plus minus */
-.ui-icon-plus {
-    background-position:    -0 50%;
-}
-
-.ui-icon-minus {
-    background-position: -36px 50%;
-}
-
-/* delete/close */
-.ui-icon-delete {
-    background-position: -72px 50%;
-}
-
-/* arrows */
-.ui-icon-arrow-r {
-    background-position: -108px 50%;
-}
-.ui-icon-arrow-l {
-    background-position: -144px 50%;
-}
-.ui-icon-arrow-u {
-    background-position: -180px 50%;
-}
-.ui-icon-arrow-d {
-    background-position: -216px 50%;
-}
-
-/* misc */
-.ui-icon-check {
-    background-position: -252px 50%;
-}
-
-.ui-icon-gear {
-    background-position: -288px 50%;
-}
-
-.ui-icon-refresh {
-    background-position: -324px 50%;
-}
-
-.ui-icon-forward {
-    background-position: -360px 50%;
-}
-
-.ui-icon-back {
-    background-position: -396px 50%;
-}
-
-.ui-icon-grid {
-    background-position: -432px 50%;
-}
-
-.ui-icon-star {
-    background-position: -468px 50%;
-}
-
-.ui-icon-alert {
-    background-position: -504px 50%;
-}
-
-.ui-icon-info {
-    background-position: -540px 50%;
-}
-
-.ui-icon-home {
-    background-position: -576px 50%;
-}
-
-.ui-icon-search,
-.ui-icon-searchfield:after {
-    background-position: -612px 50%;
-}
-
-.ui-icon-checkbox-off {
-    background-position: -684px 50%;
-}
-
-.ui-icon-checkbox-on {
-    background-position: -648px 50%;
-}
-
-.ui-icon-radio-off {
-    background-position: -756px 50%;
-}
-
-.ui-icon-radio-on {
-    background-position: -720px 50%;
-}
-
-/* loading icon */
-.ui-icon-loading {
-    background: url("../images/ajax-loader.gif");
-    background-size: 46px 46px;
 }
 
 div.left {

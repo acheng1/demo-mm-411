@@ -211,7 +211,7 @@ function mainpage_calendarHandler(result) {
                 remainingContent = (remaining + ' minutes from now');
             }
             var includeDash = remaining > 30 ? '' : ' - ';
-            $('<li>').append(
+            $('<li>').attr({'data-icon':'custom-arrow-r'}).append(
                 $('<a>').attr({ 'href': '#', 'onclick': 'mainpage_selectMeeting(' + i + ');return false;'}).append(
                     $('<img>').attr({'src':'images/transparent.gif',
                                      'width':'1px',
@@ -332,7 +332,7 @@ function mainpage_BingSearch() {
                         $.each(gListings, function (i, item) {
                             var p1 = new LatLon(Geo.parseDMS(item.Latitude), Geo.parseDMS(item.Longitude));
                             var p2 = new LatLon(Geo.parseDMS(gLocation.latitude), Geo.parseDMS(gLocation.longitude));
-                            $('<li>').append(
+                            $('<li>').attr({'data-icon':'custom-arrow-r'}).append(
                                 $('<a>').attr({ 'href': '#detailspage', 'onclick': 'globalSelectListing(' + i + ');return false;'}).append(
                                     $('<img>').attr({'src':'images/transparent.gif',
                                                      'width':'1px',
@@ -358,7 +358,6 @@ function mainpage_BingSearch() {
                             NativeBridge.setMessage(msg);
                             NativeBridge.playTTS("female", "en-US", msg);
                             NativeBridge.setGrammar(generateListingGrammarUrl(), null, mainpage_listingGrammarHandler);
-                            $('#ad').hide();
                         }
                     } else {
                         $('#results-container').empty();
