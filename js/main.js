@@ -361,10 +361,12 @@ function mainpage_BingSearch() {
                         }
                     } else {
                         $('#results-container').empty();
-                        $('<p>').attr({'align' : 'center'}).html("No result found").appendTo('#results-container');
+                        $('<ul>').attr({ 'data-role': 'listview', 'data-inset': 'true', 'id': 'search-results' }).appendTo('#results-container');
+                            $('<li>').attr({'style': 'text-align:center'}).append(
+                                $('<span>').html("No results found.")).appendTo('#search-results');
                         $('#results-container').trigger('create');
 
-                        var msg = "What are you looking for?";
+                        var msg = "Say the name of a business.";
                         NativeBridge.setMessage(msg);
                         NativeBridge.playTTS("female", "en-US", msg);
                         NativeBridge.setGrammar(gSearchGrammarRootUrl, null, mainpage_searchGrammarHandler);
