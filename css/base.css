@@ -7,6 +7,7 @@
 
 .ui-page {
     background-repeat:repeat-x;
+    min-height: 480px !important;
 }
 
 .ui-icon-custom-arrow-r {
@@ -136,7 +137,6 @@ div.page-title {
 /* =Main Page */
 div.mainpage {
     background-repeat:repeat-x;
-    min-height: 480px !important;
 }
 
 div.searchbar {
