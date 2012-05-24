@@ -32,13 +32,16 @@
 
 .ui-header .ui-btn-left {
     left: 3px;
-    top: 9px;
+    top: 6px;
 }
 
 .ui-header .ui-btn-right {
     right: 3px;
-    top: 9px;
+    top: 6px;
 }
+
+.ui-grid-a .ui-block-a { width: 30% }
+.ui-grid-a .ui-block-b { width: 70%; } 
 
 div.left {
     width: 50%;
@@ -52,7 +55,7 @@ div.right {
 }
 
 div.logo-bg {
-    height: 45px;
+    height: 40px;
     margin: 0;
     padding: 0px;
 }
