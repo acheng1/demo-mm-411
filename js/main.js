@@ -85,6 +85,20 @@ function isValidMeeting(meeting) {
     return true;
 }
 
+function truncate(str, len) {
+    if (str != null && str.length) {
+        truncated = $.trim(str)
+                     .substring(0, len)
+                     .split(" ")
+                     .slice(0, -1) 
+                     .join(" ");
+        if (truncated.indexOf('(') > 5) {
+            truncated = truncated.split('(').slice(0, 1);
+        }
+    }
+    return truncated;
+}
+
 //-----------------------------------------------------------------------------
 
 $(document).bind("mobileinit",
@@ -191,6 +205,9 @@ function mainpage_calendarHandler(result) {
             }
 
             count++;
+
+            // truncate meeting location
+            m.location = truncate(m.location, 30);
 
             if (gCurrentMeeting == null) {
                 gCurrentMeeting = m;
