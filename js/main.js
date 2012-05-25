@@ -94,7 +94,7 @@ function truncate(str, len) {
         truncated = $.trim(str)
                      .substring(0, len)
                      .split(" ")
-                     .slice(0, -1) 
+                     .slice(0, -1)
                      .join(" ");
         if (truncated.indexOf('(') > 5) {
             truncated = truncated.split('(').slice(0, 1);
@@ -620,6 +620,9 @@ function generateDetailsGrammarUrl() {
 function directionspage_init() {
 //    NativeBridge.setMessage(null);
 //    NativeBridge.setGrammar(null, null, emptyGrammarHandler);
+    if (gSkin == '247') {
+        $('#departure-alert').empty();
+    }
 }
 
 function directionspage_before_show() {

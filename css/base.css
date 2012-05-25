@@ -42,7 +42,7 @@
 }
 
 .ui-grid-a .ui-block-a { width: 30% }
-.ui-grid-a .ui-block-b { width: 70%; } 
+.ui-grid-a .ui-block-b { width: 70%; }
 
 div.left {
     width: 50%;
@@ -259,7 +259,7 @@ img.details-map-marker {
     position: relative;
     left: -12px;
     top: -38px;
-    background-color: #transparent;
+    background-color: transparent;
     background-repeat: no-repeat;
     padding: 19px;
 }
@@ -356,7 +356,7 @@ img.directions-start-map-marker {
     position: relative;
     left: -12px;
     top: -38px;
-    background-color: #transparent;
+    background-color: transparent;
     background-repeat: no-repeat;
     padding: 19px;
 }
@@ -365,7 +365,7 @@ img.directions-end-map-marker {
     position: relative;
     left: -12px;
     top: -38px;
-    background-color: #transparent;
+    background-color: transparent;
     background-repeat: no-repeat;
     padding: 19px;
 }
@@ -516,21 +516,21 @@ div.share-footer {
 }
 
 a.share-add_other {
-    background-size: 152px 46px;
-    width: 152px;
-    height: 46px;
+    background-size: 302px 38px;
+    width: 302px;
+    height: 38px;
 }
 
 a.sms-btn {
     margin-top: 6px;
-    background-size: 152px 46px;  
+    background-size: 152px 46px;
     width: 152px;
     height: 46px;
 }
 
 a.email-btn {
     margin-top: 6px;
-    background-size: 151px 46px;  
+    background-size: 151px 46px;
     width: 151px;
     height: 46px;
 }
