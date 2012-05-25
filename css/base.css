@@ -559,6 +559,10 @@ a.email-btn {
     overflow: auto;
 }
 
+.addcontact-loading {
+    color: #8f8f8f;
+}
+
 .addcontact-name {
     font-size: 12pt;
     font-weight: bold;
