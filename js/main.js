@@ -16,7 +16,6 @@ var gDirectionsGrammarRootUrl = gGrammarRootUrl + "?type=directions";
 var gShareGrammarRootUrl = gGrammarRootUrl + "?type=share";
 var gCurrentMeeting = null;
 var gUseSuggested = false;
-var gCurrentMeetingMaxParticipants = 15;
 
 var gLocation = null;
 var gChangeSearchString = null;
@@ -103,6 +102,53 @@ function truncate(str, len) {
     return truncated;
 }
 
+function getShareListFromMeeting(meeting) {
+    var list = [];
+    if (meeting == null) {
+        return list;
+    }
+
+    for (var i = 0; i < meeting.participants.length; i++) {
+        var participant = meeting.participants[i];
+        list.push(
+                {
+                    name : participant.name,
+                    email : participant.url.replace("mailto:",""),
+                    phone : ''
+                }
+        );
+    }
+
+    return list;
+}
+
+function getFullNameFromContact(contact) {
+    var name = contact.First + (contact.Middle ? ' ' + contact.Middle : '') + (contact.Last ? ' ' + contact.Last : '');
+    return name;
+}
+
+function getOneEmailFromContact(contact) {
+    var email = '';
+    if (contact.email.work != null) {
+        email = contact.email.work;
+    } else if (contact.email.home != null) {
+        email = contact.email.home;
+    } else if (contact.email.other != null) {
+        email = contact.email.other;
+    }
+
+    return email;
+}
+
+function getMobilePhoneFromContact(contact) {
+    var phone = '';
+    if (contact.phone.mobile != null) {
+        phone = contact.phone.mobile;
+    }
+
+    return phone;
+}
+
 //-----------------------------------------------------------------------------
 
 $(document).bind("mobileinit",
@@ -147,8 +193,8 @@ function globalContactsHandler(result) {
     if (result != null) {
         gContactList = result;
         gContactList.sort(function(a,b) {
-            var n1 = a.First + (a.Middle ? ' ' + a.Middle : '') + (a.Last ? ' ' + a.Last : '');
-            var n2 = b.First + (b.Middle ? ' ' + b.Middle : '') + (b.Last ? ' ' + b.Last : '');
+            var n1 = getFullNameFromContact(a);
+            var n2 = getFullNameFromContact(b);
             if (n1 < n2) {
                 return -1;
             } else if (n1 > n2) {
@@ -249,6 +295,7 @@ function mainpage_calendarHandler(result) {
 
             if (gCurrentMeeting == null) {
                 gCurrentMeeting = m;
+                gShareList = getShareListFromMeeting(gCurrentMeeting);
                 $("#searchbar").val(gCurrentMeeting.location);
                 var msg = "Are you looking for '" + gCurrentMeeting.location + "'?";
                 NativeBridge.setMessage(msg);
@@ -289,9 +336,10 @@ function mainpage_calendarHandler(result) {
 
 function mainpage_selectMeeting(index) {
     if (index >= 0 && gMeetingList.length > index) {
-       gCurrentMeeting = gMeetingList[index];
-       $("#searchbar").val(gCurrentMeeting.location);
-       $("#searchform").submit();
+        gCurrentMeeting = gMeetingList[index];
+        gShareList = getShareListFromMeeting(gCurrentMeeting);
+        $("#searchbar").val(gCurrentMeeting.location);
+        $("#searchform").submit();
     }
 }
 
@@ -580,8 +628,7 @@ function detailspage_detailsGrammarHandler(result) {
             history.back();
         } else if ((regexmatch = interp.match(/^share,(\d+)/i)) != null) {
             var idx = regexmatch[1];
-            var participants = gCurrentMeeting.participants;
-            if (idx < participants.length && idx < gCurrentMeetingMaxParticipants) {
+            if (idx < gShareList.length) {
                 gSharePrecheckIndex = idx;
                 $.mobile.changePage("#sharepage");
             }
@@ -604,10 +651,8 @@ function generateDetailsGrammarUrl() {
     }
 
     if (gCurrentMeeting != null) {
-        var participants = gCurrentMeeting.participants;
-        var count = participants.length > gCurrentMeetingMaxParticipants ? gCurrentMeetingMaxParticipants : participants.length;
-        for (var i = 0; i < count; i++) {
-            var p = participants[i];
+        for (var i = 0; i < gShareList.length; i++) {
+            var p = gShareList[i];
             url += ("&name." + i + "=" + encodeURIComponent(p.name));
         }
     }
@@ -773,12 +818,7 @@ function sharepage_before_show() {
     $('#address_all').hide();
     $('<fieldset />').attr({ 'id': 'addresses', "data-role": "controlgroup" }).appendTo('#address-select');
 
-    var participants = gCurrentMeeting.participants != null ? gCurrentMeeting.participants : [];
-    var count = participants.length;
-    if (count > gCurrentMeetingMaxParticipants) {
-        count = gCurrentMeetingMaxParticipants;
-    }
-    for (var i = 0; i < count; i++) {
+    for (var i = 0; i < gShareList.length; i++) {
         var checked = (gSharePrecheckIndex && gSharePrecheckIndex == i) ? true : false;
         var checkedClass = checked ? 'share-contact_name-selected' : 'share-contact_name';
         $('<input />').attr({ 'type': 'checkbox',
@@ -789,7 +829,7 @@ function sharepage_before_show() {
                               "data-iconpos" : "right"}).appendTo('#addresses');
         $('<label />').attr({ 'for': 'address' + i,
                               'id': 'address-label' + i,
-                              'class': checkedClass}).text(participants[i].name).appendTo('#addresses');
+                              'class': checkedClass}).text(gShareList[i].name).appendTo('#addresses');
 
         $('#address' + i).change(function () {
              var inputId = $(this).attr('id');
@@ -798,13 +838,7 @@ function sharepage_before_show() {
              $("label[for='" + inputId + "']").toggleClass("share-contact_name", !isChecked);
         });
     }
-    //$('<input />').attr({ 'type': 'checkbox',
-    //                      'data-icon' : 'plus',
-    //                      'id' : 'add_other',
-    //                      "class": "custom",
-    //                      "data-iconpos" : "right"}).appendTo('#addresses');
-    //$('<label />').attr({ 'for': 'add_other',
-    //                      'class': 'share-add_other'}).text('Add Other Contacts').appendTo('#addresses');
+
     $('<a>').attr({ 'data-role' : 'button',
                     'onclick' : 'sharepage_addcontacts_click(); return false;',
                     'class' : 'share-add_other'}).append(
@@ -873,10 +907,8 @@ function generateShareGrammarUrl() {
     var url = gShareGrammarRootUrl;
 
     if (gCurrentMeeting != null) {
-        var participants = gCurrentMeeting.participants;
-        var count = participants.length > gCurrentMeetingMaxParticipants ? gCurrentMeetingMaxParticipants : participants.length;
-        for (var i = 0; i < count; i++) {
-            var p = participants[i];
+        for (var i = 0; i < gShareList.length; i++) {
+            var p = gShareList[i];
             url += ("&name." + i + "=" + encodeURIComponent(p.name));
         }
     }
@@ -887,7 +919,25 @@ function generateShareGrammarUrl() {
 //-----------------------------------------------------------------------------
 
 function addcontactdialog_addcontact(index) {
-    alert("TODO: add " + gContactList[index].First);
+    if (index >= gContactList.length) {
+        return;
+    }
+
+    var contact = gContactList[index];
+    var name = getFullNameFromContact(contact);
+    var email = getOneEmailFromContact(contact);
+    var phone = getMobilePhoneFromContact(contact);
+
+    gShareList.push(
+            {
+                name : name,
+                email : email,
+                phone : phone
+            }
+    );
+
+    gSharePrecheckIndex = gShareList.length - 1;
+
     $.mobile.changePage("#sharepage");
 }
 
@@ -911,7 +961,7 @@ function addcontactdialog_show() {
 
     for (var i = 0; i < gContactList.length; i++) {
         var contact = gContactList[i];
-        var name = contact.First + (contact.Middle ? ' ' + contact.Middle : '') + (contact.Last ? ' ' + contact.Last : '');
+        var name = getFullNameFromContact(contact);
 
         $('<li>').attr({'data-icon':'plus', 'name':'contact'}).append(
             $('<a>').attr({'onclick': 'addcontactdialog_addcontact(' + i + ');return false;'}).append(
@@ -942,17 +992,16 @@ function sendEmail() {
     gRecipientList = [];
     $("input[name=address]:checked").each(
         function () {
-          var id = $(this).attr("id");
-          if ((regexmatch = id.match(/(\d+)$/)) != null) {
-            var index = regexmatch[1];
-            if (gCurrentMeeting != null) {
-              var participants = gCurrentMeeting.participants;
-              if (participants.length && participants[index] != null) {
-                var email = participants[index].url.replace("mailto:","");
-                gRecipientList.push(email);
-              }
+            var id = $(this).attr("id");
+            if ((regexmatch = id.match(/(\d+)$/)) != null) {
+                var index = regexmatch[1];
+                if (gShareList.length) {
+                    var p = gShareList[index];
+                    if (p != null && p.email != '') {
+                        gRecipientList.push(p.email);
+                    }
+                }
             }
-          }
         }
     );
 
@@ -962,8 +1011,8 @@ function sendEmail() {
                 gSelectedListing.StateOrProvince;
     var subject = gUseSuggested ? gSelectedListing.Title : gCurrentMeeting.title;
     if (gRecipientList.length) {
-      NativeBridge.sendMail(gRecipientList, subject, body);
+        NativeBridge.sendMail(gRecipientList, subject, body);
     } else {
-      NativeBridge.sendMail(null, subject, body);
+        NativeBridge.sendMail(null, subject, body);
     }
 }
