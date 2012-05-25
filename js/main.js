@@ -819,7 +819,7 @@ function sharepage_before_show() {
     $('<fieldset />').attr({ 'id': 'addresses', "data-role": "controlgroup" }).appendTo('#address-select');
 
     for (var i = 0; i < gShareList.length; i++) {
-        var checked = (gSharePrecheckIndex && gSharePrecheckIndex == i) ? true : false;
+        var checked = (gSharePrecheckIndex != null && gSharePrecheckIndex == i) ? true : false;
         var checkedClass = checked ? 'share-contact_name-selected' : 'share-contact_name';
         $('<input />').attr({ 'type': 'checkbox',
                               'checked' : checked,
