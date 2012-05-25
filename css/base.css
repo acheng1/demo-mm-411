@@ -32,12 +32,12 @@
 
 .ui-header .ui-btn-left {
     left: 3px;
-    top: 9px;
+    top: 6px;
 }
 
 .ui-header .ui-btn-right {
     right: 3px;
-    top: 9px;
+    top: 6px;
 }
 
 div.left {
@@ -52,7 +52,7 @@ div.right {
 }
 
 div.logo-bg {
-    height: 45px;
+    height: 40px;
     margin: 0;
     padding: 0px;
 }
@@ -170,7 +170,7 @@ div.searchbar {
 }
 
 img.calendar-icon {
-    background-size: 17px 19px;  
+    background-size: 17px 19px;
     width: 17px;
     height: 19px;
 }
@@ -181,17 +181,17 @@ img.calendar-icon {
 }
 
 #search-results .ui-corner-all {
-    border-radius: 0.1em; 
+    border-radius: 0.1em;
 }
 
 a.back-btn {
-    background-size: 48px 27px;  
+    background-size: 48px 27px;
     width: 48px;
     height: 27px;
 }
 
 img.list-location-marker {
-    background-size: 12px 20px;  
+    background-size: 12px 20px;
     width: 12px;
     height: 20px;
 }
@@ -216,7 +216,7 @@ img.list-location-marker {
 
 /* =Details Page */
 a.back-btn-results {
-    background-size: 62px 27px;  
+    background-size: 62px 27px;
     width: 62px;
     height: 27px;
 }
@@ -247,14 +247,14 @@ a.back-btn-results {
 }
 
 img.details-location-marker {
-    background-size: 11px 18px;  
+    background-size: 11px 18px;
     width: 11px;
     height: 18px;
 }
 
 img.details-map-marker {
-    position: relative; 
-    left: -12px; 
+    position: relative;
+    left: -12px;
     top: -38px;
     background-color: #transparent;
     background-repeat: no-repeat;
@@ -263,31 +263,31 @@ img.details-map-marker {
 
 a.connect-me-btn {
     margin-left: 5px;
-    background-size: 151px 46px;  
+    background-size: 151px 46px;
     width: 151px;
     height: 46px;
 }
 
 a.share-info-btn {
     margin-right: 5px;
-    background-size: 151px 46px;  
+    background-size: 151px 46px;
     width: 151px;
     height: 46px;
 }
 
 #map {
-    width: 300px; 
+    width: 300px;
     height: 300px
 }
 
 img.get-directions-btn {
-    background-size: 150px 30px;  
+    background-size: 150px 30px;
     width: 150px;
     height: 30px;
 }
 
 img.departure-alert-btn {
-    background-size: 150px 30px;  
+    background-size: 150px 30px;
     width: 150px;
     height: 30px;
 }
@@ -332,13 +332,13 @@ img.departure-alert-btn {
 }
 
 img.small-location-marker {
-    background-size: 10px 15px;  
+    background-size: 10px 15px;
     width: 10px;
     height: 15px;
 }
 
 #directions-map {
-    width: 300px; 
+    width: 300px;
     height: 150px
 }
 
@@ -347,11 +347,11 @@ img.small-location-marker {
   width: 300px;
   overflow: auto;
   background-color: #FFFFFF;
-} 
+}
 
 img.directions-start-map-marker {
-    position: relative; 
-    left: -12px; 
+    position: relative;
+    left: -12px;
     top: -38px;
     background-color: #transparent;
     background-repeat: no-repeat;
@@ -359,8 +359,8 @@ img.directions-start-map-marker {
 }
 
 img.directions-end-map-marker {
-    position: relative; 
-    left: -12px; 
+    position: relative;
+    left: -12px;
     top: -38px;
     background-color: #transparent;
     background-repeat: no-repeat;
@@ -413,27 +413,27 @@ td.adp-substep {
 
 a.departure-alert-btn {
     margin-left: 5px;
-    background-size: 151px 46px;  
+    background-size: 151px 46px;
     width: 151px;
     height: 46px;
 }
 
 a.share-directions-btn {
     margin-right: 5px;
-    background-size: 152px 46px;  
+    background-size: 152px 46px;
     width: 152px;
     height: 46px;
 }
 
 /* =Share Page */
 a.back-btn-info {
-    background-size: 42px 27px;  
+    background-size: 42px 27px;
     width: 42px;
     height: 27px;
 }
 
 img.address-pointer {
-    background-size: 10px 15px;  
+    background-size: 10px 15px;
     width: 10px;
     height: 15px;
 }
@@ -451,7 +451,7 @@ img.address-pointer {
     margin: 8px;
 }
 
-div.share-footer { 
+div.share-footer {
     height: 60px;
     border:none;
 }
@@ -512,23 +512,38 @@ div.share-footer {
     color: #8f8f8f;
 }
 
-.share-add_other {
-    font-size: 14pt;
-    font-weight: bold;
-    color: #6b6b6b;
+a.share-add_other {
+    background-size: 152px 46px;
+    width: 152px;
+    height: 46px;
 }
 
 a.sms-btn {
     margin-top: 8px;
-    background-size: 152px 46px;  
+    background-size: 152px 46px;
     width: 152px;
     height: 46px;
 }
 
 a.email-btn {
     margin-top: 8px;
-    background-size: 151px 46px;  
+    background-size: 151px 46px;
     width: 151px;
     height: 46px;
 }
 
+/* =AddContact Page */
+#contacts-container {
+    margin: 8px;
+}
+
+#contacts .ui-li {
+    border: none;
+    overflow: auto;
+}
+
+.addcontact-name {
+    font-size: 14pt;
+    font-weight: bold;
+    color: #0a4c83;
+}

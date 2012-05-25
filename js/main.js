@@ -1,3 +1,6 @@
+var gSkin = '247';
+//var gSkin = 'att';
+
 // Bing API information
 var gBingServiceURI = "http://api.bing.net/json.aspx";
 var gBingAppID = "828426A1EC5F944259B11E6BF645E1F9744EE229";
@@ -120,6 +123,22 @@ function globalSelectListing(index) {
     }
 }
 
+function globalContactsHandler(result) {
+    if (result != null) {
+        gContactList = result;
+        gContactList.sort(function(a,b) {
+            var n1 = a.First + (a.Middle ? ' ' + a.Middle : '') + (a.Last ? ' ' + a.Last : '');
+            var n2 = b.First + (b.Middle ? ' ' + b.Middle : '') + (b.Last ? ' ' + b.Last : '');
+            if (n1 < n2) {
+                return -1;
+            } else if (n1 > n2) {
+                return 1;
+            }
+            return 0;
+        });
+    }
+}
+
 //-----------------------------------------------------------------------------
 // Page specific functions, local scope
 // DO NOT CALL THEM FROM OTHER PAGES
@@ -132,8 +151,8 @@ function mainpage_init() {
     //var currentTime = 1334923200000;
     var endTime = currentTime + 86400000;
     NativeBridge.getEvents(currentTime, endTime, mainpage_calendarHandler);
-
     NativeBridge.getLocation(globalLocationHandler);
+    NativeBridge.getContacts("", globalContactsHandler);
 
     // hide back button
     $('#list-back-btn').hide();
@@ -458,10 +477,10 @@ function detailspage_show() {
          new google.maps.Size(1, 1));
 
     var marker = new google.maps.Marker({
-        position: endLatlng, 
+        position: endLatlng,
         map: map,
-        icon: transparent 
-    });   
+        icon: transparent
+    });
 
     var customMarker = new Marker({
       map: map
@@ -475,19 +494,21 @@ function detailspage_show() {
       control.src = 'images/transparent.gif';
       control.className = "get-directions-btn";
       controlDiv.appendChild(control);
-    
+
       google.maps.event.addDomListener(control, 'click', function() {
         $.mobile.changePage("#directionspage");
       });
     }
-    
+
     function DepartureControl(controlDiv, map) {
-      var control = document.createElement('img');
-      control.height = '1px';
-      control.width= '1px';
-      control.src = 'images/transparent.gif';
-      control.className = "departure-alert-btn";
-      controlDiv.appendChild(control);
+      if (gSkin != '247') {
+        var control = document.createElement('img');
+        control.height = '1px';
+        control.width= '1px';
+        control.src = 'images/transparent.gif';
+        control.className = "departure-alert-btn";
+        controlDiv.appendChild(control);
+      }
     }
 
     // Create the DIV to hold the controls
@@ -738,19 +759,32 @@ function sharepage_before_show() {
              $("label[for='" + inputId + "']").toggleClass("share-contact_name", !isChecked);
         });
     }
-    $('<input />').attr({ 'type': 'checkbox',
-                          'data-icon' : 'plus',
-                          'id' : 'add_other',
-                          "class": "custom",
-                          "data-iconpos" : "right"}).appendTo('#addresses');
-    $('<label />').attr({ 'for': 'add_other',
-                          'class': 'share-add_other'}).text('Add Other Contacts').appendTo('#addresses');
+    //$('<input />').attr({ 'type': 'checkbox',
+    //                      'data-icon' : 'plus',
+    //                      'id' : 'add_other',
+    //                      "class": "custom",
+    //                      "data-iconpos" : "right"}).appendTo('#addresses');
+    //$('<label />').attr({ 'for': 'add_other',
+    //                      'class': 'share-add_other'}).text('Add Other Contacts').appendTo('#addresses');
+    $('<a>').attr({ 'data-role' : 'button',
+                    'onclick' : 'sharepage_addcontacts_click(); return false;',
+                    'class' : 'share-add_other'}).append(
+        $('<img>').attr({'src':'images/transparent.gif',
+                 'width':'1px',
+                 'height':'1px',
+                 'class':'ui-li-icon ui-corner-none'})).appendTo('#addresses');
+
     gSharePrecheckIndex = null;
     $('#address-select').trigger('create');
 
     $("#address_all").change(function () {
         $("input[name=address]").attr("checked", $(this).is(":checked")).checkboxradio("refresh");
     });
+}
+
+function sharepage_addcontacts_click() {
+    $.mobile.showPageLoadingMsg();
+    $.mobile.changePage('#addcontactdialog');
 }
 
 function sharepage_shareGrammarHandler(result) {
@@ -810,6 +844,52 @@ function generateShareGrammarUrl() {
 
     return url;
 }
+
+//-----------------------------------------------------------------------------
+
+function addcontactdialog_addcontact(index) {
+    alert("TODO: add " + gContactList[index].First);
+    $.mobile.changePage("#sharepage");
+}
+
+function addcontactdialog_init() {
+}
+
+function addcontactdialog_before_show() {
+    NativeBridge.setMessage(null);
+    NativeBridge.setGrammar(null, null, emptyGrammarHandler);
+
+}
+
+function addcontactdialog_show() {
+    if (gContactList.length > 0 && $('li[name=contact]').length > 0) {
+        // list has been populated, nothing to be done here
+        $.mobile.hidePageLoadingMsg();
+        return;
+    }
+
+    $('#buffer').empty();
+
+    for (var i = 0; i < gContactList.length; i++) {
+        var contact = gContactList[i];
+        var name = contact.First + (contact.Middle ? ' ' + contact.Middle : '') + (contact.Last ? ' ' + contact.Last : '');
+
+        $('<li>').attr({'data-icon':'plus', 'name':'contact'}).append(
+            $('<a>').attr({'onclick': 'addcontactdialog_addcontact(' + i + ');return false;'}).append(
+                $('<img>').attr({'src':'images/transparent.gif',
+                                 'width':'1px',
+                                 'height':'1px',
+                                 'class':'ui-li-icon ui-corner-none'})).append(
+                $('<span>').attr('class', 'addcontact-name')
+                    .html(name))).appendTo("#contacts");
+    }
+
+    $('#contacts').listview('refresh');
+
+    $.mobile.hidePageLoadingMsg();
+}
+
+//-----------------------------------------------------------------------------
 
 function sendSMS() {
     var body  = gSelectedListing.Title + ', ' +

@@ -8,7 +8,7 @@
   <meta content="yes" name="apple-mobile-web-app-capable" />
   <link rel="stylesheet" type="text/css" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
   <link rel="stylesheet" type="text/css" href="css/base.css" />
-  <link rel="stylesheet" type="text/css" href="css/att.css" />
+  <link rel="stylesheet" type="text/css" href="css/247.css" />
   <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
   <script type="text/javascript" src="common/js/bridge.js"></script>
   <!--<script type="text/javascript" src="common/js/bridge-fake.js"></script>-->
@@ -152,8 +152,36 @@
             <a id="emailbutton" class="ui-btn-right email-btn" href="#" onclick="sendEmail(); return false;" rel="external"></a>
         </div>
     </div>
-    <!-- /ui-body wrapper --></div>
+    <!-- /ui-body wrapper -->
+</div>
 <!-- /page -->
+
+<div id="addcontactdialog" data-role="page">
+  <script>
+    $("#addcontactdialog").live("pageinit", addcontactdialog_init);
+    $("#addcontactdialog").live("pagebeforeshow", addcontactdialog_before_show);
+    $("#addcontactdialog").live("pageshow", addcontactdialog_show);
+  </script>
+  <div data-role="header">
+    <div class="logo-bg">
+      <a class="ui-btn-left back-btn" href="#sharepage"></a>
+      <div class="page-title">Add Contact</div>
+    </div>
+  </div>
+  <!-- /header -->
+
+  <div data-role="content">
+    <div id="contacts-container" data-role="content">
+      <div id="buffer">
+        <ul data-role="listview" data-inset="true">
+          <li style="text-align:center"><span>Loading your contact list...</span></li>
+        </ul>
+      </div>
+      <ul id="contacts" data-role="listview" data-inset="true"></ul>
+    </div>
+  </div>
+
+</div>
 
 </body>
 
