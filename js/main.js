@@ -87,14 +87,27 @@ function isValidMeeting(meeting) {
 
 function truncate(str, len) {
     var truncated = str;
-    if (str != null && str.length && str.indexOf(' ') > 0) {
-        truncated = $.trim(str)
-                     .substring(0, len)
-                     .split(" ")
-                     .slice(0, -1)
-                     .join(" ");
-        if (truncated.indexOf('(') > 5) {
-            truncated = truncated.split('(').slice(0, 1);
+
+    if (truncated != null && truncated.length) {
+        var space = truncated.indexOf(' ');
+        
+        if (space > 0) {
+            var sub = truncated.substring(space);
+            
+            var regex = /[^\w\s]/;
+            var match = sub.match(regex);
+            var end = match ? sub.indexOf(match) : sub.length;
+            
+            truncated = [truncated.substring(0, space), sub.substring(0, end)].join(" ").trim();
+   
+            // if still too long
+            if (truncated.length >= len) {
+                truncated = truncated.trim()
+                                     .substring(0, len)
+                                     .split(" ")
+                                     .slice(0, -1)
+                                     .join(" ");
+            }
         }
     }
     return truncated;
@@ -302,6 +315,7 @@ function mainpage_calendarHandler(result) {
             count++;
 
             // truncate meeting location
+            var fullLocation = m.location;
             m.location = truncate(m.location, 30);
 
             if (gCurrentMeeting == null) {
@@ -334,7 +348,7 @@ function mainpage_calendarHandler(result) {
                     $('<span>').attr('class', 'meeting-name')
                         .html(m.title + '<br />')).append(
                     $('<span>').attr('class', 'meeting-address')
-                        .html(m.location + '<br />')).append(
+                        .html(fullLocation + '<br />')).append(
                     $('<span>').attr('class', 'meeting-time')
                         .html(time + includeDash)).append(
                     $('<span>').attr({'class' : 'meeting-time-remaining'})
