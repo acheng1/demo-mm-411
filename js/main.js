@@ -100,7 +100,8 @@ function truncate(str, len) {
             
             truncated = [truncated.substring(0, space), sub.substring(0, end)].join(" ").trim();
    
-            if (truncated >= len) {
+            // if still too long
+            if (truncated.length >= len) {
                 truncated = truncated.trim()
                                      .substring(0, len)
                                      .split(" ")
@@ -302,6 +303,7 @@ function mainpage_calendarHandler(result) {
             count++;
 
             // truncate meeting location
+            var fullLocation = m.location;
             m.location = truncate(m.location, 30);
 
             if (gCurrentMeeting == null) {
@@ -334,7 +336,7 @@ function mainpage_calendarHandler(result) {
                     $('<span>').attr('class', 'meeting-name')
                         .html(m.title + '<br />')).append(
                     $('<span>').attr('class', 'meeting-address')
-                        .html(m.location + '<br />')).append(
+                        .html(fullLocation + '<br />')).append(
                     $('<span>').attr('class', 'meeting-time')
                         .html(time + includeDash)).append(
                     $('<span>').attr({'class' : 'meeting-time-remaining'})
