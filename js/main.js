@@ -22,8 +22,6 @@ var gChangeSearchString = null;
 var gListings = [];
 var gSelectedListing = null;
 
-var gSharePrecheckIndex = null;
-
 var gRecipientList = [];
 
 var gContactList = [];
@@ -114,7 +112,8 @@ function getShareListFromMeeting(meeting) {
                 {
                     name : participant.name,
                     email : participant.url.replace("mailto:",""),
-                    phone : ''
+                    phone : '',
+                    checked : false
                 }
         );
     }
@@ -629,7 +628,7 @@ function detailspage_detailsGrammarHandler(result) {
         } else if ((regexmatch = interp.match(/^share,(\d+)/i)) != null) {
             var idx = regexmatch[1];
             if (idx < gShareList.length) {
-                gSharePrecheckIndex = idx;
+                gShareList[idx].checked = true;
                 $.mobile.changePage("#sharepage");
             }
         }
@@ -819,7 +818,7 @@ function sharepage_before_show() {
     $('<fieldset />').attr({ 'id': 'addresses', "data-role": "controlgroup" }).appendTo('#address-select');
 
     for (var i = 0; i < gShareList.length; i++) {
-        var checked = (gSharePrecheckIndex != null && gSharePrecheckIndex == i) ? true : false;
+        var checked = gShareList[i].checked;
         var checkedClass = checked ? 'share-contact_name-selected' : 'share-contact_name';
         $('<input />').attr({ 'type': 'checkbox',
                               'checked' : checked,
@@ -832,10 +831,15 @@ function sharepage_before_show() {
                               'class': checkedClass}).text(gShareList[i].name).appendTo('#addresses');
 
         $('#address' + i).change(function () {
-             var inputId = $(this).attr('id');
-             var isChecked = $(this).is(":checked");
-             $("label[for='" + inputId + "']").toggleClass("share-contact_name-selected", isChecked);
-             $("label[for='" + inputId + "']").toggleClass("share-contact_name", !isChecked);
+            var inputId = $(this).attr('id');
+            var isChecked = $(this).is(":checked");
+            var regexMatch = null;
+            if ((regexMatch = inputId.match(/address(\d+)/)) != null) {
+                var index = regexMatch[1];
+                gShareList[index].checked = isChecked;
+            }
+            $("label[for='" + inputId + "']").toggleClass("share-contact_name-selected", isChecked);
+            $("label[for='" + inputId + "']").toggleClass("share-contact_name", !isChecked);
         });
     }
 
@@ -847,7 +851,6 @@ function sharepage_before_show() {
                  'height':'1px',
                  'class':'ui-li-icon ui-corner-none'})).appendTo('#addresses');
 
-    gSharePrecheckIndex = null;
     $('#address-select').trigger('create');
 
     $("#address_all").change(function () {
@@ -932,11 +935,10 @@ function addcontactdialog_addcontact(index) {
             {
                 name : name,
                 email : email,
-                phone : phone
+                phone : phone,
+                checked : true
             }
     );
-
-    gSharePrecheckIndex = gShareList.length - 1;
 
     $.mobile.changePage("#sharepage");
 }
