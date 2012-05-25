@@ -188,6 +188,7 @@ function globalLocationHandler(result) {
     if (result != null) {
         gLocation = result;
 
+        $('#searchbar').textinput('enable');
         var currentTime = (new Date()).getTime();
         //var currentTime = 1334923200000;
         var endTime = currentTime + 86400000;
