@@ -279,7 +279,7 @@ function mainpage_calendarHandler(result) {
                         .html(m.location + '<br />')).append(
                     $('<span>').attr('class', 'meeting-time')
                         .html(time + includeDash)).append(
-                    $('<span>').attr({'class' : 'meeting-time', 'style' : 'color:red'})
+                    $('<span>').attr({'class' : 'meeting-time-remaining'})
                         .html(remainingContent))).appendTo("#meetings");
         }
 

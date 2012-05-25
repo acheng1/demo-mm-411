@@ -1,7 +1,7 @@
 /* =Global */
 .ui-page {
     background-image: url("../images/247/Px411-Background.png");
-    background-color: #2093C3;
+    background-color: #2093c3;
 }
 
 .ui-icon-custom-arrow-r {
@@ -20,9 +20,11 @@ div.logo-bg {
 }
 
 div.logo {
+    background-size: 65px 22px;
     background-image: url("../images/247/Px411-TopNav-Logo.png");
     width: 65px;
-    height: 40px;
+    height: 22px;
+    padding: 8px;
 }
 
 div.searchbar {
@@ -37,6 +39,14 @@ img.calendar-icon {
     background-image: url("../images/247/Px411-List-CalendarIcon.png");
 }
 
+.meeting-name {
+    color: #24a3d8;
+}
+
+.meeting-time-remaining {
+    color: #ed9d17;
+}
+
 /* =Results Page */
 a.back-btn {
     background-image: url("../images/247/Px411-TopNav-BackButton.png");
@@ -44,6 +54,10 @@ a.back-btn {
 
 img.list-location-marker {
     background-image: url("../images/247/Px411-List-LocationMarkerIcon.png");
+}
+
+.listing-name {
+    color: #24a3d8;
 }
 
 /* =Details Page */
@@ -76,6 +90,14 @@ img.get-directions-btn {
 
 img.departure-alert-btn {
     background-image: url("../images/247/Px411-Details-DepartureAlert.png");
+}
+
+.details-name {
+    color: #f9a417;
+}
+
+.details-label {
+    color: #24a3d8;
 }
 
 /* =Directions Page */
@@ -117,6 +139,10 @@ a.share-directions-btn {
 }
 */
 
+.directions-name {
+    color: #f9a417;
+}
+
 /* =Share Page */
 img.address-pointer {
     background-image: url("../images/247/Px411-AddressPointer.png");
@@ -137,3 +163,16 @@ a.email-btn {
 a.share-add_other {
     background-image: url("../images/247/Px411-ShareInfo-AddOtherContacts.png");
 }
+
+.share-name {
+    color: #f9a417;
+}
+
+.share-meeting-name {
+    color: #1890c2;
+}
+
+.share-contact_name-selected {
+    color: #24a3d8;
+}
+

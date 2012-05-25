@@ -13,6 +13,7 @@
 .ui-icon-custom-arrow-r {
     background: none;
     background-repeat: no-repeat;
+    background-size: 11px 17px;
     height: 17px;
     width: 11px;
 }
@@ -172,6 +173,11 @@ div.searchbar {
     font-weight: normal;
 }
 
+.meeting-time-remaining {
+    font-size: 10pt;
+    font-weight: normal;
+}
+
 img.calendar-icon {
     background-size: 17px 19px;
     width: 17px;
@@ -239,6 +245,7 @@ a.back-btn-results {
     font-weight: bold;
     color: #7c7c7c;
 }
+
 .details-label {
     font-size: 8pt;
     color: #2073ae;
@@ -262,6 +269,7 @@ img.details-map-marker {
     background-color: transparent;
     background-repeat: no-repeat;
     padding: 19px;
+    background-size: 25px 38px;
 }
 
 a.connect-me-btn {
@@ -359,6 +367,7 @@ img.directions-start-map-marker {
     background-color: transparent;
     background-repeat: no-repeat;
     padding: 19px;
+    background-size: 25px 38px;
 }
 
 img.directions-end-map-marker {
@@ -368,6 +377,7 @@ img.directions-end-map-marker {
     background-color: transparent;
     background-repeat: no-repeat;
     padding: 19px;
+    background-size: 25px 38px;
 }
 
 div.adp-summary {
@@ -404,6 +414,7 @@ td.adp-substep {
     background-color: transparent;
     background-repeat: no-repeat;
     background-position: 5px 10px;
+    background-size: 25px 38px;
 }
 
 .adp-placemark {
@@ -412,6 +423,7 @@ td.adp-substep {
     background-color: transparent;
     background-repeat: no-repeat;
     background-position: 5px 10px;
+    background-size: 25px 38px;
 }
 
 a.departure-alert-btn {
@@ -455,8 +467,9 @@ img.address-pointer {
 }
 
 div.share-footer {
-    height: 60px;
+    height: 77px;
     border:none;
+    background-size: 320px 77px;
 }
 
 .share-name {
@@ -507,6 +520,7 @@ div.share-footer {
     font-size: 14pt;
     font-weight: bold;
     color: #0a4c83;
+    background: #ddedf8;
 }
 
 .share-contact_name {
@@ -522,14 +536,14 @@ a.share-add_other {
 }
 
 a.sms-btn {
-    margin-top: 6px;
+    margin-top: 12px;
     background-size: 152px 46px;
     width: 152px;
     height: 46px;
 }
 
 a.email-btn {
-    margin-top: 6px;
+    margin-top: 12px;
     background-size: 151px 46px;
     width: 151px;
     height: 46px;
