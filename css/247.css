@@ -88,10 +88,6 @@ img.get-directions-btn {
     height: 30px;
 }
 
-img.departure-alert-btn {
-    background-image: url("../images/247/Px411-Details-DepartureAlert.png");
-}
-
 .details-name {
     color: #f9a417;
 }
@@ -121,10 +117,6 @@ img.directions-end-map-marker {
    background-image: url("../images/247/Px411-Directions-EndLocationMarkerIcon.png");
 }
 
-a.departure-alert-btn {
-    background-image: url("../images/247/Px411-Directions-DepartureAlertButton.png");
-}
-
 a.share-directions-btn {
     background-image: url("../images/247/Px411-Directions-ShareDirectionsButton.png");
 }
@@ -145,7 +137,7 @@ a.share-directions-btn {
 
 /* =Share Page */
 img.address-pointer {
-    background-image: url("../images/247/Px411-AddressPointer.png");
+    background-image: url("../images/247/Px411-Directions-SmallLocationMarkerIcon.png");
 }
 
 .share-footer {

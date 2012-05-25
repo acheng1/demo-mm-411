@@ -20,9 +20,11 @@ div.logo-bg {
 }
 
 div.logo {
+    background-size: 70px 32px;    
     background-image: url("../images/att/Px411-TopNav-Logo.png");
     width: 70px;
-    height: 40px;
+    height: 32px;
+    padding: 4px;
 }
 
 div.searchbar {
@@ -30,7 +32,7 @@ div.searchbar {
 }
 
 a.back-btn-results {
-    background-image: url("../images/att/Px411-Button-ResultsBack.png");
+    background-image: url("../images/att/Px411-TopNav-ResultsBackButton.png");
 }
 
 img.calendar-icon {
@@ -60,17 +62,15 @@ img.list-location-marker {
 
 /* =Details Page */
 a.connect-me-btn {
-    background-image: url("../images/att/Px411-Button-ConnectMe.png");
-    /*background-image:
-     * url("../images/att/Px411-Details-ConnectMeButton.png");*/
+    background-image: url("../images/att/Px411-Details-ConnectMeButton.png");
 }
 
 a.share-info-btn {
-    background-image: url("../images/att/Px411-Button-ShareInfo.png");
+    background-image: url("../images/att/Px411-Details-ShareInfoButton.png");
 }
 
 a.back-btn-info {
-    background-image: url("../images/att/Px411-Button-InfoBack.png");
+    background-image: url("../images/att/Px411-TopNav-InfoBackButton.png");
 }
 
 img.details-location-marker {
@@ -142,19 +142,23 @@ a.share-directions-btn {
 
 /* =Share Page */
 img.address-pointer {
-    background-image: url("../images/att/Px411-AddressPointer.png");
+    background-image: url("../images/att/Px411-Directions-SmallLocationMarkerIcon.png");
 }
 
 .share-footer {
-    background-image: url("../images/att/Px411-Button-SendButtonBackground-cropped.png");
+    background-image: url("../images/att/Px411-ShareInfo-ButtonBackgroundPanel.png");
 }
 
 a.sms-btn {
-    background-image: url("../images/att/Px411-Button-SendSMS.png");
+    background-image: url("../images/att/Px411-ShareInfo-SendSMSButton.png");
 }
 
 a.email-btn {
-    background-image: url("../images/att/Px411-Button-SendEmail.png");
+    background-image: url("../images/att/Px411-ShareInfo-SendEmailButton.png");
+}
+
+a.share-add_other {
+    background-image: url("../images/att/Px411-ShareInfo-AddOtherContacts.png");
 }
 
 .share-name {
@@ -169,3 +173,7 @@ a.email-btn {
     color: #0a4c83;
 }
 
+/* =AddContact Page */
+.addcontact-name {
+    color: #24a3d8;
+}
