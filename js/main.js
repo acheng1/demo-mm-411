@@ -633,7 +633,7 @@ function directionspage_before_show() {
         .html(" " + gSelectedListing.Title + "<br/>"))
       .append(
       $('<span>').addClass('directions-address')
-        .html(' ' + gSelectedListing.Address +
+        .html(' ' + gSelectedListing.Address + ', ' +
                   gSelectedListing.City + ', ' +
                   gSelectedListing.StateOrProvince).prepend(
           $('<img>').attr({'src':'images/transparent.gif',
