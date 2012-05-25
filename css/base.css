@@ -7,6 +7,7 @@
 
 .ui-page {
     background-repeat:repeat-x;
+    min-height: 480px !important;
 }
 
 .ui-icon-custom-arrow-r {
@@ -39,6 +40,9 @@
     right: 3px;
     top: 6px;
 }
+
+.ui-grid-a .ui-block-a { width: 30% }
+.ui-grid-a .ui-block-b { width: 70%; } 
 
 div.left {
     width: 50%;
@@ -133,7 +137,6 @@ div.page-title {
 /* =Main Page */
 div.mainpage {
     background-repeat:repeat-x;
-    min-height: 480px !important;
 }
 
 div.searchbar {
@@ -519,15 +522,15 @@ a.share-add_other {
 }
 
 a.sms-btn {
-    margin-top: 8px;
-    background-size: 152px 46px;
+    margin-top: 6px;
+    background-size: 152px 46px;  
     width: 152px;
     height: 46px;
 }
 
 a.email-btn {
-    margin-top: 8px;
-    background-size: 151px 46px;
+    margin-top: 6px;
+    background-size: 151px 46px;  
     width: 151px;
     height: 46px;
 }

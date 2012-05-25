@@ -88,6 +88,21 @@ function isValidMeeting(meeting) {
     return true;
 }
 
+function truncate(str, len) {
+    var truncated = str;
+    if (str != null && str.length && str.indexOf(' ') > 0) {
+        truncated = $.trim(str)
+                     .substring(0, len)
+                     .split(" ")
+                     .slice(0, -1) 
+                     .join(" ");
+        if (truncated.indexOf('(') > 5) {
+            truncated = truncated.split('(').slice(0, 1);
+        }
+    }
+    return truncated;
+}
+
 //-----------------------------------------------------------------------------
 
 $(document).bind("mobileinit",
@@ -114,6 +129,11 @@ function emptyGrammarHandler(result) {
 function globalLocationHandler(result) {
     if (result != null) {
         gLocation = result;
+
+        var currentTime = (new Date()).getTime();
+        //var currentTime = 1334923200000;
+        var endTime = currentTime + 86400000;
+        NativeBridge.getEvents(currentTime, endTime, mainpage_calendarHandler);
     }
 }
 
@@ -147,10 +167,6 @@ function mainpage_init() {
 //    NativeBridge.setMessage(null);
 //    NativeBridge.setGrammar(null, null, emptyGrammarHandler);
 
-    var currentTime = (new Date()).getTime();
-    //var currentTime = 1334923200000;
-    var endTime = currentTime + 86400000;
-    NativeBridge.getEvents(currentTime, endTime, mainpage_calendarHandler);
     NativeBridge.getLocation(globalLocationHandler);
     NativeBridge.getContacts("", globalContactsHandler);
 
@@ -159,6 +175,23 @@ function mainpage_init() {
 }
 
 function mainpage_show() {
+    setTimeout("handleNoLocation()", 5000);
+}
+
+function handleNoLocation() {
+    if (gLocation == null) {
+        $('#searchbar').textinput('disable');
+        $('#results-container').empty();
+        $('<ul>').attr({ 'data-role': 'listview', 'data-inset': 'true', 'id': 'search-results' }).appendTo('#results-container');
+            $('<li>').attr({'style': 'text-align:center'}).append(
+                    $('<span>').html("Predictive 411 uses your current " +
+                                     "location to search for business listings. " +
+                                     "For best results, please turn on Location " +
+                                     "Services for Px Mobile. Go to the Settings " +
+                                     "app, select Location Services, find Px Mobile, " +
+                                     "and turn on Location Services.")).appendTo('#search-results');
+        $('#results-container').trigger('create');
+    }
 }
 
 function mainpage_before_show() {
@@ -210,6 +243,9 @@ function mainpage_calendarHandler(result) {
             }
 
             count++;
+
+            // truncate meeting location
+            m.location = truncate(m.location, 30);
 
             if (gCurrentMeeting == null) {
                 gCurrentMeeting = m;

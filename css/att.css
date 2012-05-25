@@ -22,7 +22,7 @@ div.logo-bg {
 div.logo {
     background-image: url("../images/att/Px411-TopNav-Logo.png");
     width: 70px;
-    height: 45px;
+    height: 40px;
 }
 
 div.searchbar {
@@ -30,7 +30,7 @@ div.searchbar {
 }
 
 a.back-btn-results {
-    background-image: url("../images/att/Px411-TopNav-ResultsBackButton.png");
+    background-image: url("../images/att/Px411-Button-ResultsBack.png");
 }
 
 img.calendar-icon {
@@ -54,11 +54,11 @@ a.connect-me-btn {
 }
 
 a.share-info-btn {
-    background-image: url("../images/att/Px411-Details-ShareInfoButton.png");
+    background-image: url("../images/att/Px411-Button-ShareInfo.png");
 }
 
 a.back-btn-info {
-    background-image: url("../images/att/Px411-TopNav-InfoBackButton.png");
+    background-image: url("../images/att/Px411-Button-InfoBack.png");
 }
 
 img.details-location-marker {
@@ -126,10 +126,10 @@ img.address-pointer {
 }
 
 a.sms-btn {
-    background-image: url("../images/att/Px411-ShareInfo-SendSMSButton.png");
+    background-image: url("../images/att/Px411-Button-SendSMS.png");
 }
 
 a.email-btn {
-    background-image: url("../images/att/Px411-ShareInfo-SendEmailButton.png");
+    background-image: url("../images/att/Px411-Button-SendEmail.png");
 }
 
