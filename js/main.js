@@ -161,6 +161,18 @@ function getMobilePhoneFromContact(contact) {
     return phone;
 }
 
+function addToGlobalShareList(person) {
+    for (var i = 0; i < gShareList.length; i++) {
+        var p = gShareList[i];
+        if (p.email != null && person.email != null && p.email == person.email) {
+            // duplicated entry based on email
+            return;
+        }
+    }
+
+    gShareList.push(person);
+}
+
 //-----------------------------------------------------------------------------
 
 $(document).bind("mobileinit",
@@ -869,7 +881,9 @@ function sharepage_before_show() {
     $('#address-select').trigger('create');
 
     $("#address_all").change(function () {
-        $("input[name=address]").attr("checked", $(this).is(":checked")).checkboxradio("refresh");
+        var isChecked = $(this).is(":checked");
+        $("input[name=address]").attr("checked", isChecked).checkboxradio("refresh");
+        $("input[name=address]").change();
     });
 }
 
@@ -900,17 +914,22 @@ function sharepage_shareGrammarHandler(result) {
         } else if ((regexmatch = interp.match(/^\d+$/)) != null) {
             var idx = regexmatch[0];
             $("#address" + idx).attr("checked", true).checkboxradio("refresh");
+            $("#address" + idx).change();
         } else if ((regexmatch = interp.match(/^email,(\d+)$/)) != null) {
             var idx = regexmatch[1];
             $("#address_all").attr("checked", false).checkboxradio("refresh");
+            $("#address_all").change();
             $("input[name=address]").attr("checked", false).checkboxradio("refresh");
             $("#address" + idx).attr("checked", true).checkboxradio("refresh");
+            $("#address" + idx).change();
             $("#emailbutton").click();
         } else if ((regexmatch = interp.match(/^sms,(\d+)$/)) != null) {
             var idx = regexmatch[1];
             $("#address_all").attr("checked", false).checkboxradio("refresh");
+            $("#address_all").change();
             $("input[name=address]").attr("checked", false).checkboxradio("refresh");
             $("#address" + idx).attr("checked", true).checkboxradio("refresh");
+            $("#address" + idx).change();
             $("#smsbutton").click();
         }
         NativeBridge.setMessage(null);
@@ -946,7 +965,7 @@ function addcontactdialog_addcontact(index) {
     var email = getOneEmailFromContact(contact);
     var phone = getMobilePhoneFromContact(contact);
 
-    gShareList.push(
+    addToGlobalShareList(
             {
                 name : name,
                 email : email,
@@ -998,11 +1017,32 @@ function addcontactdialog_show() {
 //-----------------------------------------------------------------------------
 
 function sendSMS() {
+    gRecipientList = [];
+    $("input[name=address]:checked").each(
+        function () {
+            var id = $(this).attr("id");
+            if ((regexmatch = id.match(/(\d+)$/)) != null) {
+                var index = regexmatch[1];
+                if (gShareList.length) {
+                    var p = gShareList[index];
+                    if (p != null && p.phone != '') {
+                        gRecipientList.push(p.phone);
+                    }
+                }
+            }
+        }
+    );
+
     var body  = gSelectedListing.Title + ', ' +
                 gSelectedListing.Address + ', ' +
                 gSelectedListing.City + ', ' +
                 gSelectedListing.StateOrProvince;
-    NativeBridge.sendText(null, body);
+
+    if (gRecipientList.length) {
+        NativeBridge.sendText(gRecipientList, body);
+    } else {
+        NativeBridge.sendText(null, body);
+    }
 }
 
 function sendEmail() {
