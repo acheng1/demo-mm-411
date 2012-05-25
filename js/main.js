@@ -316,14 +316,13 @@ function mainpage_calendarHandler(result) {
             count++;
 
             // truncate meeting location
-            var fullLocation = m.location;
-            m.location = truncate(m.location, 30);
+            m.ttslocation = truncate(m.location, 30);
 
             if (gCurrentMeeting == null) {
                 gCurrentMeeting = m;
                 gShareList = getShareListFromMeeting(gCurrentMeeting);
-                $("#searchbar").val(gCurrentMeeting.location);
-                var msg = "Are you looking for '" + gCurrentMeeting.location + "'?";
+                $("#searchbar").val(gCurrentMeeting.ttslocation);
+                var msg = "Are you looking for '" + gCurrentMeeting.ttslocation + "'?";
                 NativeBridge.setMessage(msg);
                 NativeBridge.playTTS("female", "en-US", msg);
                 NativeBridge.setGrammar(gSearchGrammarRootUrl, null, mainpage_searchGrammarHandler);
@@ -349,7 +348,7 @@ function mainpage_calendarHandler(result) {
                     $('<span>').attr('class', 'meeting-name')
                         .html(m.title + '<br />')).append(
                     $('<span>').attr('class', 'meeting-address')
-                        .html(fullLocation + '<br />')).append(
+                        .html(m.location + '<br />')).append(
                     $('<span>').attr('class', 'meeting-time')
                         .html(time + includeDash)).append(
                     $('<span>').attr({'class' : 'meeting-time-remaining'})
@@ -364,7 +363,7 @@ function mainpage_selectMeeting(index) {
     if (index >= 0 && gMeetingList.length > index) {
         gCurrentMeeting = gMeetingList[index];
         gShareList = getShareListFromMeeting(gCurrentMeeting);
-        $("#searchbar").val(gCurrentMeeting.location);
+        $("#searchbar").val(gCurrentMeeting.ttslocation);
         $("#searchform").submit();
     }
 }
