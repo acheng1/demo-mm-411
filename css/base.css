@@ -237,13 +237,13 @@ a.back-btn-results {
 }
 
 .details-name {
-    font-size: 16pt;
+    font-size: 14pt;
     color: #0b335c;
     font-weight: bold;
 }
 
 .details-url {
-    font-size: 11pt;
+    font-size: 9pt;
     font-weight: bold;
     color: #7c7c7c;
 }
@@ -259,9 +259,9 @@ a.back-btn-results {
 }
 
 img.details-location-marker {
-    background-size: 11px 18px;
-    width: 11px;
-    height: 18px;
+    background-size: 17px 28px;
+    width: 17px;
+    height: 28px;
 }
 
 img.details-map-marker {
@@ -328,13 +328,13 @@ img.departure-alert-btn {
 }
 
 .directions-name {
-    font-size: 16pt;
+    font-size: 14pt;
     color: #0b335c;
     font-weight: bold;
 }
 
 .directions-url {
-    font-size: 11pt;
+    font-size: 9pt;
     font-weight: bold;
     color: #7c7c7c;
 }
@@ -345,6 +345,7 @@ img.departure-alert-btn {
 }
 
 img.small-location-marker {
+    margin: 5px 0 0 0;
     background-size: 10px 15px;
     width: 10px;
     height: 15px;
@@ -450,6 +451,7 @@ a.back-btn-info {
 }
 
 img.address-pointer {
+    margin: 5px 0 0 0;
     background-size: 10px 15px;
     width: 10px;
     height: 15px;
@@ -475,13 +477,13 @@ div.share-footer {
 }
 
 .share-name {
-    font-size: 16pt;
+    font-size: 14pt;
     color: #0b335c;
     font-weight: bold;
 }
 
 .share-url {
-    font-size: 11pt;
+    font-size: 9pt;
     font-weight: bold;
     color: #7c7c7c;
 }

@@ -1,19 +1,21 @@
+// Customization
 var gSkin = '247';
 //var gSkin = 'att';
 
-// Bing API information
-var gBingServiceURI = "http://api.bing.net/json.aspx";
-var gBingAppID = "828426A1EC5F944259B11E6BF645E1F9744EE229";
-var gBingSearchRadius = "25.0";
-var gBingSearchNumResults = 10;
+// Business API information
+var gResourceRootSslUrl = "https://ec2-184-72-7-75.us-west-1.compute.amazonaws.com";
+var gResourceRootUrl    = "http://ec2-184-72-7-75.us-west-1.compute.amazonaws.com";
+var gApiPath            = '/perl/demo-411-tmp';
+var gSearchServiceURI   = gResourceRootUrl + gApiPath + "/search/search.pl";
+var gListingServiceURI  = gResourceRootUrl + gApiPath + "/search/details.pl";
+var gBusinessSearchNumResults = 10;
 
-var gResourceRootUrl = "https://ec2-184-72-7-75.us-west-1.compute.amazonaws.com/";
-var gGrammarRootUrl = gResourceRootUrl + "perl/demo-411-tmp/grammars/dynamicgram.pl";
-var gSearchGrammarRootUrl = gGrammarRootUrl + "?type=search";
-var gListingGrammarRootUrl = gGrammarRootUrl + "?type=listing";
-var gDetailsGrammarRootUrl = gGrammarRootUrl + "?type=details";
+var gGrammarRootUrl           = gResourceRootSslUrl + gApiPath + "/grammars/dynamicgram.pl";
+var gSearchGrammarRootUrl     = gGrammarRootUrl + "?type=search";
+var gListingGrammarRootUrl    = gGrammarRootUrl + "?type=listing";
+var gDetailsGrammarRootUrl    = gGrammarRootUrl + "?type=details";
 var gDirectionsGrammarRootUrl = gGrammarRootUrl + "?type=directions";
-var gShareGrammarRootUrl = gGrammarRootUrl + "?type=share";
+var gShareGrammarRootUrl      = gGrammarRootUrl + "?type=share";
 var gCurrentMeeting = null;
 var gUseSuggested = false;
 
@@ -45,26 +47,6 @@ function getShortPeriodString(date1, date2) {
     return str;
 }
 
-function getTimeHourString(date) {
-    var h = date.getHours();
-    var m = date.getMinutes();
-
-    var hd = h % 12;
-    hd = (hd == 0) ? 12 : hd;
-    var md = (m < 10) ? '0' + m : m;
-    var s = (h < 12) ? 'am' : 'pm';
-
-    return hd + ((md == '00') ? '' : (':' + md)) + s;
-}
-
-function getTimeRemaining(date) {
-    var now = new Date();
-    var diff = new Date();
-    diff.setTime(date.getTime() - now.getTime());
-    var m = Math.ceil(diff.getTime()/60000);
-    return m > 0 ? m : 0;
-}
-
 function isValidMeeting(meeting) {
     if (!meeting) {
         return false;
@@ -83,34 +65,6 @@ function isValidMeeting(meeting) {
     }
 
     return true;
-}
-
-function truncate(str, len) {
-    var truncated = str;
-
-    if (truncated != null && truncated.length) {
-        var space = truncated.indexOf(' ');
-
-        if (space > 0) {
-            var sub = truncated.substring(space);
-
-            var regex = /[^\w\s]/;
-            var match = sub.match(regex);
-            var end = match ? sub.indexOf(match) : sub.length;
-
-            truncated = [truncated.substring(0, space), sub.substring(0, end)].join(" ").trim();
-
-            // if still too long
-            if (truncated.length >= len) {
-                truncated = truncated.trim()
-                                     .substring(0, len)
-                                     .split(" ")
-                                     .slice(0, -1)
-                                     .join(" ");
-            }
-        }
-    }
-    return truncated;
 }
 
 function getShareListFromMeeting(meeting) {
@@ -180,6 +134,16 @@ $(document).bind("mobileinit",
         $.mobile.defaultPageTransition = "none";
     }
 );
+
+$(document).ready( function() {
+    $('head').append(
+        $('<link>').attr({
+             'rel': 'stylesheet'
+            ,'type': 'text/css'
+            ,'href': 'css/' + gSkin + '.css'
+        })
+    );
+});
 
 //-----------------------------------------------------------------------------
 
@@ -413,7 +377,16 @@ function mainpage_listingGrammarHandler(result) {
             $("#searchform").submit();
         } else if ((regexmatch = interp.match(/^connect,(\d+)/i)) != null) {
             var idx = regexmatch[1];
-            setTimeout('window.location="tel:' + gListings[idx].PhoneNumber+ '";', 500);
+            $.getJSON(gListingServiceURI,
+                        {
+                            'reference': gListings[idx].reference
+                        },
+                        function (data) {
+                            if (data && data.result && data.status == "OK") {
+                                var item = data.result;
+                                setTimeout('window.location="tel:' + item.formatted_phone_number + '";', 500);
+                            }
+                        });
         }
     } else {
         NativeBridge.setMessage("What?");
@@ -421,28 +394,15 @@ function mainpage_listingGrammarHandler(result) {
     }
 }
 
-// Submit a Bing search
-function mainpage_BingSearch() {
+// Submit a Business search
+function mainpage_BusinessSearch() {
     var query = $('#searchbar').val();
     $.mobile.showPageLoadingMsg();
 
-    $.getJSON(gBingServiceURI + "?JsonCallback=?",
+    $.getJSON(gSearchServiceURI,
                 {
-                    'AppId': gBingAppID,
-                    'Query': query,
-                    'Sources': 'Phonebook',
-                    'Version': '2.0',
-                    'Market': 'en-us',
-                    'UILanguage': 'en',
-                    'Latitude': gLocation.latitude,
-                    'Longitude': gLocation.longitude,
-                    'Radius': gBingSearchRadius,
-                    'Options': 'EnableHighlighting',
-                    'Phonebook.Count': gBingSearchNumResults,
-                    'Phonebook.Offset': 0,
-                    'Phonebook.FileType': 'YP',
-                    'Phonebook.SortBy': 'Distance',
-                    'JsonType': 'callback'
+                     'location': gLocation.latitude + ',' + gLocation.longitude
+                    ,'query': query
                 },
                 function (data) {
                     $.mobile.hidePageLoadingMsg();
@@ -453,12 +413,12 @@ function mainpage_BingSearch() {
                         $('#list-back-btn').show();
                     }
 
-                    if (data && data.SearchResponse && data.SearchResponse.Phonebook && data.SearchResponse.Phonebook.Results) {
-                        gListings = data.SearchResponse.Phonebook.Results;
+                    if (data && data.results && data.status == "OK") {
+                        gListings = data.results;
                         $('#results-container').empty();
                         $('<ul>').attr({ 'data-role': 'listview', 'data-inset': 'true', 'id': 'search-results' }).appendTo('#results-container');
                         $.each(gListings, function (i, item) {
-                            var p1 = new LatLon(Geo.parseDMS(item.Latitude), Geo.parseDMS(item.Longitude));
+                            var p1 = new LatLon(Geo.parseDMS(item.geometry.location.lat), Geo.parseDMS(item.geometry.location.lng));
                             var p2 = new LatLon(Geo.parseDMS(gLocation.latitude), Geo.parseDMS(gLocation.longitude));
                             $('<li>').attr({'data-icon':'custom-arrow-r'}).append(
                                 $('<a>').attr({ 'href': '#detailspage', 'onclick': 'globalSelectListing(' + i + ');return false;'}).append(
@@ -467,14 +427,14 @@ function mainpage_BingSearch() {
                                                      'height':'1px',
                                                      'class':'ui-li-icon ui-corner-none list-location-marker'})).append(
                                     $('<span>').addClass('listing-name')
-                                        .html(item.Title + '<br />')).append(
+                                        .html(item.name + '<br />')).append(
                                     $('<span>').addClass('listing-address')
-                                        .html(item.Address + ', ' +
-                                              item.City + ', ' +
-                                              item.StateOrProvince + ' ' +
-                                              item.PostalCode + '<br />')).append(
+                                        .html(item.vicinity + '<br />')).append(
                                     $('<span>').addClass('listing-distance')
                                         .html('Approx. ' + (roundNumber(p1.distanceTo(p2)/1.609344, 2)) + ' miles'))).appendTo("#search-results");
+                            if (i >= gBusinessSearchNumResults-1) {
+                                return false;
+                            }
                         });
                         $('#results-container').trigger('create');
 
@@ -510,8 +470,11 @@ function generateListingGrammarUrl() {
     if (gListings != null) {
         for (var i = 0; i < gListings.length; i++) {
             var listing = gListings[i];
-            url += ("&city." + i + "=" + encodeURIComponent(listing.City));
-            url += ("&address." + i + "=" + encodeURIComponent(listing.Address));
+            var address = splitAddress(listing.vicinity);
+            if (address.street && address.city) {
+                url += ("&city." + i + "=" + encodeURIComponent(address.city));
+                url += ("&address." + i + "=" + encodeURIComponent(address.street));
+            }
         }
     }
 
@@ -530,48 +493,47 @@ function detailspage_before_show() {
     //NativeBridge.setMessage(msg);
     //NativeBridge.playTTS("female", "en-US", msg);
 
-    //var address = gSelectedListing.Address + ', ' + gSelectedListing.City + ', ' + gSelectedListing.StateOrProvince + ' ' + gSelectedListing.PostalCode;
-    //var mapKey = 'AqjFRf87m4pQCIGoMVGrIYHvhAuEhIIsTg45OQBhPArmxXM8nSllp6CZrEuKo9t-';
-    //var mapURL = 'http://dev.virtualearth.net/REST/V1/Imagery/Map/Road/' +
-    //    encodeURIComponent(address) +
-    //    '?mapSize=192,221&mapLayer=TrafficFlow&key=' + mapKey;
-    //var mapURL = 'http://maps.googleapis.com/maps/api/staticmap?' +
-    //    'zoom=16' + '&' +
-    //    'size=290x300' + '&' +
-    //    'maptype=roadmap' + '&' +
-    //    'markers=' + encodeURIComponent('size:mid|color:red|' + gSelectedListing.Latitude + ',' + gSelectedListing.Longitude) + '&' +
-    //    'sensor=false';
-    $('#details').empty();
-    $('<ul>').attr({ 'data-role': 'listview', 'data-inset': 'true', 'id': 'details-listing' }).appendTo('#details');
-    $('<li>').append(
-      $('<span>').addClass('details-name')
-        .html(" " + gSelectedListing.Title).prepend(
-        $('<img>').attr({'src':'images/transparent.gif',
-                         'width':'1px',
-                         'height':'1px',
-                         'class':'details-location-marker'}))).appendTo('#details-listing');
-    $('<li>').append(
-      $('<div>').addClass('ui-grid-a').append(
-        $('<div>').addClass('ui-block-a').append(
-          $('<span>').addClass('details-label')
-            .html('ADDRESS:')),
-        $('<div>').addClass('ui-block-b').append(
-          $('<span>').addClass('details-address')
-            .html(gSelectedListing.Address + '<br />' +
-                  gSelectedListing.City + ', ' +
-                  gSelectedListing.StateOrProvince)))).appendTo('#details-listing');
-    $('#details').trigger('create');
-    $('#call').attr('href', 'tel:' + gSelectedListing.PhoneNumber.replace(/[^0-9]/g, '')).trigger('create');
+    $.getJSON(gListingServiceURI,
+                {
+                    'reference': gSelectedListing.reference
+                },
+                function (data) {
+                    if (data && data.result && data.status == "OK") {
+                        var item = data.result;
+                        gSelectedListing.formatted_phone_number = item.formatted_phone_number ? item.formatted_phone_number : '';
+                        gSelectedListing.website = cleanURL(item.website);
+
+                        $('#details').empty();
+                        $('<ul>').attr({ 'data-role': 'listview', 'data-inset': 'true', 'id': 'details-listing' }).appendTo('#details');
+                        $('<li>').attr({ 'style': 'padding-top: 11px' }).append(
+                          $('<img>').attr({'src':'images/transparent.gif',
+                                           'width':'1px',
+                                           'height':'1px',
+                                           'class':'ui-li-icon ui-corner-none details-location-marker'})).append(
+                          $('<span>').addClass('details-name')
+                            .html(gSelectedListing.name)).append(
+                          $('<span>').addClass('details-url')
+                            .html(gSelectedListing.website ? "<br />" + gSelectedListing.website : '')).appendTo('#details-listing');
+                        $('<li>').append(
+                          $('<div>').addClass('ui-grid-a').append(
+                            $('<div>').addClass('ui-block-a').append(
+                              $('<span>').addClass('details-label')
+                                .html('ADDRESS:')),
+                            $('<div>').addClass('ui-block-b').append(
+                              $('<span>').addClass('details-address')
+                                .html(gSelectedListing.vicinity)))).appendTo('#details-listing');
+                        $('#details').trigger('create');
+                        $('#call').attr('href', 'tel:' + gSelectedListing.formatted_phone_number.replace(/[^0-9]/g, '')).trigger('create');
+                    }
+                });
 }
 
 function detailspage_show() {
     NativeBridge.setMessage(null);
     NativeBridge.setGrammar(generateDetailsGrammarUrl(), null, detailspage_detailsGrammarHandler);
 
-    var endLatlng = new google.maps.LatLng(gSelectedListing.Latitude, gSelectedListing.Longitude);
-    var end = gSelectedListing.Address + ',' +
-              gSelectedListing.City + ',' +
-              gSelectedListing.StateOrProvince;
+    var endLatlng = new google.maps.LatLng(gSelectedListing.geometry.location.lat, gSelectedListing.geometry.location.lng);
+    var end = gSelectedListing.vicinity;
     var myOptions = {
       zoom: 16,
       center: endLatlng,
@@ -582,7 +544,7 @@ function detailspage_show() {
     };
     var map = new google.maps.Map(document.getElementById("map"), myOptions);
 
-    var transparent = new google.maps.MarkerImage('images/transparent.png',
+    var transparent = new google.maps.MarkerImage('images/transparent.gif',
          new google.maps.Size(1, 1));
 
     var marker = new google.maps.Marker({
@@ -671,8 +633,11 @@ function generateDetailsGrammarUrl() {
     if (gListings != null) {
         for (var i = 0; i < gListings.length; i++) {
             var listing = gListings[i];
-            url += ("&city." + i + "=" + encodeURIComponent(listing.City));
-            url += ("&address." + i + "=" + encodeURIComponent(listing.Address));
+            var address = splitAddress(listing.vicinity);
+            if (address.street && address.city) {
+                url += ("&city." + i + "=" + encodeURIComponent(address.city));
+                url += ("&address." + i + "=" + encodeURIComponent(address.street));
+            }
         }
     }
 
@@ -699,18 +664,17 @@ function directionspage_before_show() {
     $('<ul>').attr({ 'data-role': 'listview', 'data-inset': 'true', 'id': 'directions-listing' }).appendTo('#directions-details');
     $('<li>').append(
       $('<span>').addClass('directions-name')
-        .html(" " + gSelectedListing.Title + "<br/>"))
-      .append(
+        .html(" " + gSelectedListing.name + "<br/>")).append(
+      $('<span>').addClass('directions-url')
+        .html(gSelectedListing.website ? gSelectedListing.website + '<br />' : '')).append(
       $('<span>').addClass('directions-address')
-        .html(' ' + gSelectedListing.Address + ', ' +
-                  gSelectedListing.City + ', ' +
-                  gSelectedListing.StateOrProvince).prepend(
+        .html(' ' + gSelectedListing.vicinity).prepend(
           $('<img>').attr({'src':'images/transparent.gif',
                            'width':'1px',
                            'height':'1px',
                            'class':'small-location-marker'}))).appendTo('#directions-listing');
     $('#directions-details').trigger('create');
-    $('#call').attr('href', 'tel:' + gSelectedListing.PhoneNumber.replace(/[^0-9]/g, '')).trigger('create');
+    $('#call').attr('href', 'tel:' + gSelectedListing.formatted_phone_number.replace(/[^0-9]/g, '')).trigger('create');
 }
 
 function directionspage_show() {
@@ -722,10 +686,8 @@ function directionspage_show() {
     var directionsService = new google.maps.DirectionsService();
     directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});
 
-    var endLatlng = new google.maps.LatLng(gSelectedListing.Latitude, gSelectedListing.Longitude);
-    var end = gSelectedListing.Address + ',' +
-              gSelectedListing.City + ',' +
-              gSelectedListing.StateOrProvince;
+    var endLatlng = new google.maps.LatLng(gSelectedListing.geometry.location.lat, gSelectedListing.geometry.location.lng);
+    var end = gSelectedListing.vicinity;
     var myOptions = {
       zoom: 16,
       center: endLatlng,
@@ -746,7 +708,7 @@ function directionspage_show() {
         travelMode: google.maps.DirectionsTravelMode.DRIVING
     };
 
-    var transparent = new google.maps.MarkerImage('images/transparent.png',
+    var transparent = new google.maps.MarkerImage('images/transparent.gif',
          new google.maps.Size(1, 1));
 
     directionsService.route(request, function(response, status) {
@@ -821,11 +783,11 @@ function sharepage_before_show() {
     $('<ul>').attr({ 'data-role': 'listview', 'data-inset': 'true', 'id': 'share-listing' }).appendTo('#share-info');
     $('<li>').append(
       $('<span>').addClass('share-name')
-        .html(gSelectedListing.Title + '<br />'),
+        .html(gSelectedListing.name + '<br />'),
+      $('<span>').addClass('share-url')
+        .html(gSelectedListing.website ? gSelectedListing.website + '<br />' : ''),
       $('<span>').addClass('share-address').html(' ' +
-              gSelectedListing.Address + ', ' +
-              gSelectedListing.City + ', ' +
-              gSelectedListing.StateOrProvince).prepend(
+              gSelectedListing.vicinity).prepend(
         $('<img>').attr({'src':'images/transparent.gif',
                          'width':'1px',
                          'height':'1px',
@@ -1052,10 +1014,8 @@ function sendSMS() {
         }
     );
 
-    var body  = gSelectedListing.Title + ', ' +
-                gSelectedListing.Address + ', ' +
-                gSelectedListing.City + ', ' +
-                gSelectedListing.StateOrProvince;
+    var body  = gSelectedListing.name + ', ' +
+                gSelectedListing.vicinity;
 
     if (gRecipientList.length) {
         NativeBridge.sendText(gRecipientList, body);
@@ -1081,11 +1041,9 @@ function sendEmail() {
         }
     );
 
-    var body  = gSelectedListing.Title + ', ' +
-                gSelectedListing.Address + ', ' +
-                gSelectedListing.City + ', ' +
-                gSelectedListing.StateOrProvince;
-    var subject = gUseSuggested ? gSelectedListing.Title : gCurrentMeeting.title;
+    var body  = gSelectedListing.name + ', ' +
+                gSelectedListing.vicinity;
+    var subject = gUseSuggested ? gSelectedListing.name : gCurrentMeeting.title;
     if (gRecipientList.length) {
         NativeBridge.sendMail(gRecipientList, subject, body);
     } else {

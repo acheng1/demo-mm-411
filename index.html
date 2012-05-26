@@ -8,16 +8,14 @@
   <meta content="yes" name="apple-mobile-web-app-capable" />
   <link rel="stylesheet" type="text/css" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
   <link rel="stylesheet" type="text/css" href="css/base.css" />
-  <link rel="stylesheet" type="text/css" href="css/247.css" />
   <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
   <script type="text/javascript" src="common/js/bridge.js"></script>
-  <!--<script type="text/javascript" src="common/js/bridge-fake.js"></script>-->
-  <script type="text/javascript" src="js/main.js"></script>
   <script type="text/javascript" src="js/util.js">/* Utilities */</script>
   <script type="text/javascript" src="js/latlon.js">/* Latitude/Longitude formula */</script>
   <script type="text/javascript" src="js/geo.js">/* Geodesy representation conversions */</script>
   <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
   <script type="text/javascript" src="js/marker.js">/* Map marker */</script>
+  <script type="text/javascript" src="js/main.js"></script>
   <script type="text/javascript" src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
 </head>
 
@@ -31,7 +29,7 @@
           event.preventDefault();
 
           // Do stuff here (usually AJAX);
-          mainpage_BingSearch();
+          mainpage_BusinessSearch();
           document.getElementById("focusLink").focus();
           return false;
       });
