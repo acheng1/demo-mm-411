@@ -7,7 +7,7 @@ var gBingAppID = "828426A1EC5F944259B11E6BF645E1F9744EE229";
 var gBingSearchRadius = "25.0";
 var gBingSearchNumResults = 10;
 
-var gResourceRootUrl = "http://ec2-184-72-7-75.us-west-1.compute.amazonaws.com/";
+var gResourceRootUrl = "https://ec2-184-72-7-75.us-west-1.compute.amazonaws.com/";
 var gGrammarRootUrl = gResourceRootUrl + "perl/demo-411-tmp/grammars/dynamicgram.pl";
 var gSearchGrammarRootUrl = gGrammarRootUrl + "?type=search";
 var gListingGrammarRootUrl = gGrammarRootUrl + "?type=listing";
