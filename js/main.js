@@ -90,16 +90,16 @@ function truncate(str, len) {
 
     if (truncated != null && truncated.length) {
         var space = truncated.indexOf(' ');
-        
+
         if (space > 0) {
             var sub = truncated.substring(space);
-            
+
             var regex = /[^\w\s]/;
             var match = sub.match(regex);
             var end = match ? sub.indexOf(match) : sub.length;
-            
+
             truncated = [truncated.substring(0, space), sub.substring(0, end)].join(" ").trim();
-   
+
             // if still too long
             if (truncated.length >= len) {
                 truncated = truncated.trim()
@@ -648,6 +648,7 @@ function detailspage_detailsGrammarHandler(result) {
         } else if ((regexmatch = interp.match(/^\d+$/)) != null) {
             globalSelectListing(regexmatch[0]);
             $("#detailspage").trigger("pagebeforeshow");
+            $("#detailspage").trigger("pageshow");
         } else if ((regexmatch = interp.match(/^no,(.+)/i)) != null) {
             gChangeSearchString = regexmatch[1];
             history.back();
@@ -675,11 +676,9 @@ function generateDetailsGrammarUrl() {
         }
     }
 
-    if (gCurrentMeeting != null) {
-        for (var i = 0; i < gShareList.length; i++) {
-            var p = gShareList[i];
-            url += ("&name." + i + "=" + encodeURIComponent(p.name));
-        }
+    for (var i = 0; i < gShareList.length; i++) {
+        var p = gShareList[i];
+        url += ("&name." + i + "=" + encodeURIComponent(p.name));
     }
 
     return url;
@@ -716,7 +715,7 @@ function directionspage_before_show() {
 
 function directionspage_show() {
     NativeBridge.setMessage(null);
-    NativeBridge.setGrammar(gDirectionsGrammarRootUrl, null, directionspage_directionsGrammarHandler);
+    NativeBridge.setGrammar(generateDirectionsGrammarUrl(), null, directionspage_directionsGrammarHandler);
 
     $('#directions-panel').empty();
     var directionDisplay;
@@ -775,13 +774,34 @@ function directionspage_show() {
 function directionspage_directionsGrammarHandler(result) {
     if (result != null && result.length > 0) {
         var interp = result[0].interpretation;
+        var regexmatch = null;
         if (interp == "share") {
             $.mobile.changePage("#sharepage");
+        } else if (interp == "alert") {
+            // do nothing, just reset the grammar
+            NativeBridge.setGrammar(generateDirectionsGrammarUrl(), null, directionspage_directionsGrammarHandler);
+        } else if ((regexmatch = interp.match(/^share,(\d+)/i)) != null) {
+            var idx = regexmatch[1];
+            if (idx < gShareList.length) {
+                gShareList[idx].checked = true;
+                $.mobile.changePage("#sharepage");
+            }
         }
     } else {
         NativeBridge.setMessage("What?");
-        NativeBridge.setGrammar(gDirectionsGrammarRootUrl, null, directionspage_directionsGrammarHandler);
+        NativeBridge.setGrammar(generateDirectionsGrammarUrl(), null, directionspage_directionsGrammarHandler);
     }
+}
+
+function generateDirectionsGrammarUrl() {
+    var url = gDirectionsGrammarRootUrl;
+
+    for (var i = 0; i < gShareList.length; i++) {
+        var p = gShareList[i];
+        url += ("&name." + i + "=" + encodeURIComponent(p.name));
+    }
+
+    return url;
 }
 
 //-----------------------------------------------------------------------------
@@ -930,6 +950,8 @@ function sharepage_shareGrammarHandler(result) {
             $("#address" + idx).attr("checked", true).checkboxradio("refresh");
             $("#address" + idx).change();
             $("#smsbutton").click();
+        } else if (interp == "addother") {
+            sharepage_addcontacts_click();
         }
         NativeBridge.setMessage(null);
     } else {
@@ -942,11 +964,9 @@ function sharepage_shareGrammarHandler(result) {
 function generateShareGrammarUrl() {
     var url = gShareGrammarRootUrl;
 
-    if (gCurrentMeeting != null) {
-        for (var i = 0; i < gShareList.length; i++) {
-            var p = gShareList[i];
-            url += ("&name." + i + "=" + encodeURIComponent(p.name));
-        }
+    for (var i = 0; i < gShareList.length; i++) {
+        var p = gShareList[i];
+        url += ("&name." + i + "=" + encodeURIComponent(p.name));
     }
 
     return url;
