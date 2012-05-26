@@ -69,9 +69,12 @@ function splitAddress(address) {
 
     if (address) {
         var s = address.split(',');
-        if (s.length >=2) {
-          obj.city = s.slice(s.length-1).join("").trim();
-          obj.street = s.slice(0, s.length-1).join(" ").trim();
+        if (2 == s.length) {
+            obj.city = s.slice(s.length-1).join("").trim();
+            obj.street = s.slice(0, s.length-1).join(" ").trim();
+        } else if (s.length > 2) {
+            obj.city = s.slice(s.length-1).join("").trim();
+            obj.street = s.slice(1, s.length-1).join(" ").trim();
         }
     }
 
