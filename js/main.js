@@ -16,6 +16,10 @@ var gListingGrammarRootUrl    = gGrammarRootUrl + "?type=listing";
 var gDetailsGrammarRootUrl    = gGrammarRootUrl + "?type=details";
 var gDirectionsGrammarRootUrl = gGrammarRootUrl + "?type=directions";
 var gShareGrammarRootUrl      = gGrammarRootUrl + "?type=share";
+var gAddContactGrammarRootUrl = gResourceRootSslUrl + gApiPath + "/grammars/dynamicgram-contacts.pl?type=contacts";
+var gAddContactLimitPerGrammar  = 50;
+var gAddContactGrammars         = [];
+
 var gCurrentMeeting = null;
 var gUseSuggested = false;
 
@@ -29,6 +33,7 @@ var gRecipientList = [];
 var gContactList = [];
 var gMeetingList = [];
 var gMeetingMaxCount = 5;
+var gCalendarInspected = false;
 var gShareList = [];
 
 //-----------------------------------------------------------------------------
@@ -75,11 +80,13 @@ function getShareListFromMeeting(meeting) {
 
     for (var i = 0; i < meeting.participants.length; i++) {
         var participant = meeting.participants[i];
+        var email = participant.url.replace("mailto:","");
+        var mobile = findMobilePhoneForEmail(email);
         list.push(
                 {
                     name : participant.name,
-                    email : participant.url.replace("mailto:",""),
-                    phone : '',
+                    email : email,
+                    phone : mobile,
                     checked : false
                 }
         );
@@ -101,6 +108,8 @@ function getOneEmailFromContact(contact) {
         email = contact.email.home;
     } else if (contact.email.other != null) {
         email = contact.email.other;
+    } else if (contact.email.email != null) {
+        email = contact.email.email;
     }
 
     return email;
@@ -116,15 +125,36 @@ function getMobilePhoneFromContact(contact) {
 }
 
 function addToGlobalShareList(person) {
-    for (var i = 0; i < gShareList.length; i++) {
-        var p = gShareList[i];
-        if (p.email != null && person.email != null && p.email == person.email) {
-            // duplicated entry based on email
-            return;
+    if (person.email != null && person.email != '') {
+        var elc = person.email.toLowerCase();
+        for (var i = 0; i < gShareList.length; i++) {
+            var p = gShareList[i];
+            if (p.email != null && p.email != '' && p.email.toLowerCase() == elc) {
+                // duplicated entry based on email
+                return;
+            }
         }
     }
 
     gShareList.push(person);
+}
+
+function findMobilePhoneForEmail(email)
+{
+    var elc = email.toLowerCase();
+    for (var i = 0; i < gContactList.length; i++) {
+        var contact = gContactList[i];
+        if (contact.email.work != null && contact.email.work != '' && contact.email.work.toLowerCase() == elc ||
+            contact.email.home != null && contact.email.home != '' && contact.email.home.toLowerCase() == elc ||
+            contact.email.email != null && contact.email.email != '' && contact.email.email.toLowerCase() == elc ||
+            contact.email.other != null && contact.email.other != '' && contact.email.other.toLowerCase() == elc) {
+            if (contact.phone.mobile != null && contact.phone.mobile != '') {
+                return contact.phone.mobile;
+            }
+        }
+    }
+
+    return '';
 }
 
 //-----------------------------------------------------------------------------
@@ -180,7 +210,25 @@ function globalSelectListing(index) {
 
 function globalContactsHandler(result) {
     if (result != null) {
-        gContactList = result;
+        gContactList = [];
+        for (var i = 0; i < result.length; i++) {
+            var p = result[i];
+            var name = getFullNameFromContact(p);
+            if (name == undefined || name == '' || name.match(/[@,<,>]+/) != null) {
+                // possibly bogus contact name
+                continue;
+            }
+
+            var email = getOneEmailFromContact(p);
+            var mobile = getMobilePhoneFromContact(p);
+            if (email == '' && mobile == '') {
+                // nothing to share with
+                continue;
+            }
+
+            gContactList.push(p);
+        }
+
         gContactList.sort(function(a,b) {
             var n1 = getFullNameFromContact(a);
             var n2 = getFullNameFromContact(b);
@@ -191,6 +239,9 @@ function globalContactsHandler(result) {
             }
             return 0;
         });
+
+        // Build the add contact grammar once
+        gAddContactGrammars = generateAddContactGrammarUrl();
     }
 }
 
@@ -248,11 +299,18 @@ function mainpage_before_show() {
                 NativeBridge.playTTS("female", "en-US", msg);
                 NativeBridge.setGrammar(gSearchGrammarRootUrl, null, mainpage_searchGrammarHandler);
             }
+        } else {
+            if (gCalendarInspected) {
+                var msg = "Say the name of a business";
+                NativeBridge.setMessage(msg);
+                NativeBridge.playTTS("female", "en-US", msg);
+                NativeBridge.setGrammar(gSearchGrammarRootUrl, null, mainpage_searchGrammarHandler);
+            }
         }
     } else {
-        //var msg = "Which location?";
-        //NativeBridge.setMessage(msg);
-        //NativeBridge.playTTS("female", "en-US", msg);
+        var msg = "Which location?";
+        NativeBridge.setMessage(msg);
+        NativeBridge.playTTS("female", "en-US", msg);
         NativeBridge.setGrammar(generateListingGrammarUrl(), null, mainpage_listingGrammarHandler);
     }
 }
@@ -320,7 +378,16 @@ function mainpage_calendarHandler(result) {
         }
 
         $('#meetings-container').trigger('create');
+    } else {
+        // no meeting found
+        var msg = "Say the name of a business";
+        NativeBridge.setMessage(msg);
+        NativeBridge.playTTS("female", "en-US", msg);
+        NativeBridge.setGrammar(gSearchGrammarRootUrl, null, mainpage_searchGrammarHandler);
+        gUseSuggested = true;
     }
+
+    gCalendarInspected = true;
 }
 
 function mainpage_selectMeeting(index) {
@@ -963,8 +1030,7 @@ function addcontactdialog_init() {
 
 function addcontactdialog_before_show() {
     NativeBridge.setMessage(null);
-    NativeBridge.setGrammar(null, null, emptyGrammarHandler);
-
+    NativeBridge.setGrammar(gAddContactGrammars, null, addcontactdialog_contactGrammarHandler);
 }
 
 function addcontactdialog_show() {
@@ -993,6 +1059,46 @@ function addcontactdialog_show() {
     $('#contacts').listview('refresh');
 
     $.mobile.hidePageLoadingMsg();
+}
+
+function addcontactdialog_contactGrammarHandler(result) {
+    if (result != null && result.length > 0) {
+        var interp = result[0].interpretation;
+        var grammarIdx = result[0].name;
+        var regexmatch = null;
+        if ((regexmatch = interp.match(/^\d+$/)) != null) {
+            var idx = (grammarIdx * gAddContactLimitPerGrammar) + parseInt(regexmatch[0]);
+            addcontactdialog_addcontact(idx);
+        }
+        NativeBridge.setMessage(null);
+    } else {
+        NativeBridge.setMessage("What?");
+        NativeBridge.setGrammar(gAddContactGrammars, null, addcontactdialog_contactGrammarHandler);
+    }
+}
+
+function generateAddContactGrammarUrl() {
+    var urls = [];
+    var url = gAddContactGrammarRootUrl;
+
+    var count = 0;
+    for (var i = 0; i < gContactList.length; i++) {
+        var p = gContactList[i];
+        url += ("&n." + count + "=" + encodeURIComponent(getFullNameFromContact(p)));
+
+        count++;
+        if (count >= gAddContactLimitPerGrammar) {
+            urls.push(url);
+            url = gAddContactGrammarRootUrl;
+            count = 0;
+        }
+    }
+
+    if (count > 0) {
+        urls.push(url);
+    }
+
+    return urls;
 }
 
 //-----------------------------------------------------------------------------
