@@ -712,6 +712,14 @@ use constant SHARE_GRXML => << 'End';
  </rule>
 End
 
+use constant CONTACTS_GRXML => << 'End';
+ <rule id="main" scope="public">
+  <one-of>
+    %s
+  </one-of>
+ </rule>
+End
+
 use constant WEBSEARCH => << 'End';
     <ruleref uri="http://gs1.tm-dev.reco.tellme.com/websearch"/><tag>out=rules.latest()</tag>
 End
@@ -752,6 +760,15 @@ use constant SMS => << 'End';
     send <one-of><item><item repeat="0-1">text</item> message</item><item>s m s</item></one-of> to %s <item repeat="0-1">%s</item>
 End
 
+my %xml_entity_map   = qw(& amp < lt > gt " quot ' apos);
+
+sub xml_escape($) {
+    local $_ = shift;
+    defined $_ or return;
+    s/[&<>"']/\&$xml_entity_map{$&};/g;
+    return $_;
+}
+
 our $R            = shift;
 our $APR          = Apache2::Request->new($R);
 
@@ -759,6 +776,7 @@ our $TOKEN        = "token";
 our $CITY         = "city";
 our $ADDRESS      = "address";
 our $NAME         = "name";
+our $NS           = "n";
 our $TAG          = "tag";
 our $NAME_TAG     = "tag.name";
 our $MAX_TOKENS   = 50;
@@ -819,6 +837,7 @@ $R->no_cache(1);                  # Send Pragma and Cache-Control headers
                 $address_token .= sprintf OPTIONAL, $Direction_Code{uc $addr_suffix} || $addr_suffix;
             }
 
+            ($tag, $city, $address_token) = map {xml_escape($_)} ($tag, $city, $address_token); 
             $items .= sprintf(ITEM, 
                         sprintf(PICK, $ORDINAL_NUMBERS{$num+1}), $tag) . "\n";
             $items .= sprintf(ITEM, 
@@ -867,6 +886,7 @@ $R->no_cache(1);                  # Send Pragma and Cache-Control headers
                 $address_token .= sprintf OPTIONAL, $Direction_Code{uc $addr_suffix} || $addr_suffix;
             }
 
+            ($tag, $city, $address_token) = map {xml_escape($_)} ($tag, $city, $address_token); 
             $items .= sprintf(ITEM, 
                         sprintf(CITY, lc $city), $tag) . "\n";
             $items .= sprintf(ITEM, 
@@ -880,7 +900,8 @@ $R->no_cache(1);                  # Send Pragma and Cache-Control headers
                 next unless $first;
                 my $last_gr = last_name_grammar($last);
                 $items .= sprintf(ITEM, 
-                            sprintf(SHARE, lc $first, $last_gr), $name_tag) . "\n";
+                            sprintf(SHARE, lc xml_escape($first), xml_escape($last_gr)), 
+                                           xml_escape($name_tag)) . "\n";
             }
 
             $num++;
@@ -900,7 +921,8 @@ $R->no_cache(1);                  # Send Pragma and Cache-Control headers
             my $last_gr = last_name_grammar($last);
 
             $items .= sprintf(ITEM, 
-                        sprintf(SHARE, lc $first, $last_gr), $name_tag) . "\n";
+                        sprintf(SHARE, lc xml_escape($first), xml_escape($last_gr)),
+                                       xml_escape($name_tag)) . "\n";
             $num++;
         }
         $grxml = sprintf DIRECTIONS_GRXML, $items;
@@ -916,6 +938,7 @@ $R->no_cache(1);                  # Send Pragma and Cache-Control headers
             next unless $first;
             my $last_gr = last_name_grammar($last);
 
+            ($tag, $first, $last_gr) = map {xml_escape($_)} ($tag, $first, $last_gr); 
             $items .= sprintf(ITEM, 
                         sprintf(SHARE, lc $first, $last_gr), $tag) . "\n";
             $items .= sprintf(ITEM, 
@@ -925,6 +948,20 @@ $R->no_cache(1);                  # Send Pragma and Cache-Control headers
             $num++;
         }
         $grxml = sprintf SHARE_GRXML, $items;
+    } elsif ($type eq 'contacts') {
+        $num = 0;
+        $items = '';
+        while (1) {
+            my $name = $APR->param("$NS.$num");
+            last unless $name;
+            
+            my $tag = $APR->param("$TAG.$num") || $num;
+
+            ($tag, $name) = map {xml_escape($_)} ($tag, $name); 
+            $items .= sprintf(ITEM, lc $name, $tag) . "\n";
+            $num++;
+        }
+        $grxml = sprintf CONTACTS_GRXML, $items;
     }
 
 # ===========================================================================
