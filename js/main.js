@@ -6,7 +6,7 @@ var gSkin = '247';
 var gResourceRootSslUrl = "https://ec2-184-72-7-75.us-west-1.compute.amazonaws.com";
 var gResourceRootUrl    = "http://ec2-184-72-7-75.us-west-1.compute.amazonaws.com";
 var gApiPath            = '/perl/demo-411-tmp';
-var gSearchServiceURI   = gResourceRootUrl + gApiPath + "/search/search.pl";
+var gSearchServiceURI   = gResourceRootUrl + gApiPath + "/search/search-jsonp.pl";
 var gListingServiceURI  = gResourceRootUrl + gApiPath + "/search/details.pl";
 var gBusinessSearchNumResults = 10;
 
@@ -493,39 +493,47 @@ function detailspage_before_show() {
     //NativeBridge.setMessage(msg);
     //NativeBridge.playTTS("female", "en-US", msg);
 
-    $.getJSON(gListingServiceURI,
-                {
-                    'reference': gSelectedListing.reference
-                },
-                function (data) {
-                    if (data && data.result && data.status == "OK") {
-                        var item = data.result;
-                        gSelectedListing.formatted_phone_number = item.formatted_phone_number ? item.formatted_phone_number : '';
-                        gSelectedListing.website = cleanURL(item.website);
+    if (gSelectedListing.reference == "NONE") {
+        update_details();
+    } else {
+        $.getJSON(gListingServiceURI,
+                    {
+                        'reference': gSelectedListing.reference
+                    },
+                    function (data) {
+                        if (data && data.result && data.status == "OK") {
+                            var item = data.result;
+                            gSelectedListing.formatted_phone_number = item.formatted_phone_number ? item.formatted_phone_number : '';
+                            gSelectedListing.website = cleanURL(item.website);
+                            update_details();
+                        }
+                    });
+    }
 
-                        $('#details').empty();
-                        $('<ul>').attr({ 'data-role': 'listview', 'data-inset': 'true', 'id': 'details-listing' }).appendTo('#details');
-                        $('<li>').attr({ 'style': 'padding-top: 11px' }).append(
-                          $('<img>').attr({'src':'images/transparent.gif',
-                                           'width':'1px',
-                                           'height':'1px',
-                                           'class':'ui-li-icon ui-corner-none details-location-marker'})).append(
-                          $('<span>').addClass('details-name')
-                            .html(gSelectedListing.name)).append(
-                          $('<span>').addClass('details-url')
-                            .html(gSelectedListing.website ? "<br />" + gSelectedListing.website : '')).appendTo('#details-listing');
-                        $('<li>').append(
-                          $('<div>').addClass('ui-grid-a').append(
-                            $('<div>').addClass('ui-block-a').append(
-                              $('<span>').addClass('details-label')
-                                .html('ADDRESS:')),
-                            $('<div>').addClass('ui-block-b').append(
-                              $('<span>').addClass('details-address')
-                                .html(gSelectedListing.vicinity)))).appendTo('#details-listing');
-                        $('#details').trigger('create');
-                        $('#call').attr('href', 'tel:' + gSelectedListing.formatted_phone_number.replace(/[^0-9]/g, '')).trigger('create');
-                    }
-                });
+}
+
+function update_details() {
+    $('#details').empty();
+    $('<ul>').attr({ 'data-role': 'listview', 'data-inset': 'true', 'id': 'details-listing' }).appendTo('#details');
+    $('<li>').attr({ 'style': 'padding-top: 11px' }).append(
+      $('<img>').attr({'src':'images/transparent.gif',
+                       'width':'1px',
+                       'height':'1px',
+                       'class':'ui-li-icon ui-corner-none details-location-marker'})).append(
+      $('<span>').addClass('details-name')
+        .html(gSelectedListing.name)).append(
+      $('<span>').addClass('details-url')
+        .html(gSelectedListing.website ? "<br />" + gSelectedListing.website : '')).appendTo('#details-listing');
+    $('<li>').append(
+      $('<div>').addClass('ui-grid-a').append(
+        $('<div>').addClass('ui-block-a').append(
+          $('<span>').addClass('details-label')
+            .html('ADDRESS:')),
+        $('<div>').addClass('ui-block-b').append(
+          $('<span>').addClass('details-address')
+            .html(gSelectedListing.vicinity)))).appendTo('#details-listing');
+    $('#details').trigger('create');
+    $('#call').attr('href', 'tel:' + gSelectedListing.formatted_phone_number.replace(/[^0-9]/g, '')).trigger('create');
 }
 
 function detailspage_show() {
