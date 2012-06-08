@@ -117,7 +117,7 @@ function getOneEmailFromContact(contact) {
 
 function getMobilePhoneFromContact(contact) {
     var phone = '';
-    if (contact.phone.mobile != null) {
+    if (contact && contact.phone && contact.phone.mobile != null) {
         phone = contact.phone.mobile;
     }
 
@@ -485,8 +485,6 @@ function mainpage_BusinessSearch() {
                         $('#results-container').empty();
                         $('<ul>').attr({ 'data-role': 'listview', 'data-inset': 'true', 'id': 'search-results' }).appendTo('#results-container');
                         $.each(gListings, function (i, item) {
-                            var p1 = new LatLon(Geo.parseDMS(item.geometry.location.lat), Geo.parseDMS(item.geometry.location.lng));
-                            var p2 = new LatLon(Geo.parseDMS(gLocation.latitude), Geo.parseDMS(gLocation.longitude));
                             $('<li>').attr({'data-icon':'custom-arrow-r'}).append(
                                 $('<a>').attr({ 'href': '#detailspage', 'onclick': 'globalSelectListing(' + i + ');return false;'}).append(
                                     $('<img>').attr({'src':'images/transparent.gif',
@@ -498,7 +496,7 @@ function mainpage_BusinessSearch() {
                                     $('<span>').addClass('listing-address')
                                         .html(item.vicinity + '<br />')).append(
                                     $('<span>').addClass('listing-distance')
-                                        .html('Approx. ' + (roundNumber(p1.distanceTo(p2)/1.609344, 2)) + ' miles'))).appendTo("#search-results");
+                                        .html('Approx. ' + roundNumber(item.distance, 2) + ' miles'))).appendTo("#search-results");
                             if (i >= gBusinessSearchNumResults-1) {
                                 return false;
                             }
@@ -600,7 +598,15 @@ function update_details() {
           $('<span>').addClass('details-address')
             .html(gSelectedListing.vicinity)))).appendTo('#details-listing');
     $('#details').trigger('create');
-    $('#call').attr('href', 'tel:' + gSelectedListing.formatted_phone_number.replace(/[^0-9]/g, '')).trigger('create');
+    if (gSelectedListing.formatted_phone_number == '') {
+        $('#call').attr('href', 'tel:' + gSelectedListing.formatted_phone_number.replace(/[^0-9]/g, ''))
+                  .removeClass('connect-me-btn')
+                  .click(function(e) {e.preventDefualt();}).trigger('create');
+    } else {
+        $('#call').attr('href', 'tel:' + gSelectedListing.formatted_phone_number.replace(/[^0-9]/g, ''))
+                  .addClass('connect-me-btn')
+                  .trigger('create');
+    }
 }
 
 function detailspage_show() {
@@ -739,9 +745,9 @@ function directionspage_before_show() {
     $('<ul>').attr({ 'data-role': 'listview', 'data-inset': 'true', 'id': 'directions-listing' }).appendTo('#directions-details');
     $('<li>').append(
       $('<span>').addClass('directions-name')
-        .html(" " + gSelectedListing.name + "<br/>")).append(
+        .html(" " + gSelectedListing.name + "<br/>"),
       $('<span>').addClass('directions-url')
-        .html(gSelectedListing.website ? gSelectedListing.website + '<br />' : '')).append(
+        .html(gSelectedListing.website ? gSelectedListing.website + '<br />' : ''),
       $('<span>').addClass('directions-address')
         .html(' ' + gSelectedListing.vicinity).prepend(
           $('<img>').attr({'src':'images/transparent.gif',
@@ -749,7 +755,6 @@ function directionspage_before_show() {
                            'height':'1px',
                            'class':'small-location-marker'}))).appendTo('#directions-listing');
     $('#directions-details').trigger('create');
-    $('#call').attr('href', 'tel:' + gSelectedListing.formatted_phone_number.replace(/[^0-9]/g, '')).trigger('create');
 }
 
 function directionspage_show() {

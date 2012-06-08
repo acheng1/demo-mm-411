@@ -12,6 +12,7 @@ use LWP::UserAgent;
 use URI::Escape;
 use JSON;
 use Data::Dumper;
+use Geo::Distance;
 
 our $R            = shift;
 our $APR          = Apache2::Request->new($R);
@@ -46,26 +47,30 @@ $R->no_cache(1);                  # Send Pragma and Cache-Control headers
         error($response->status_line);
     }
 
+    my $geo = new Geo::Distance;
     my $decoded = decode_json($response->decoded_content);
     # if no results, try geocode api
     if ($decoded && $decoded->{status} eq "ZERO_RESULTS") {
         $url = $GEO_URL . join '&',
                    "?address=".uri_escape($query),
+                   "bounds=$location|$location",
                    "sensor=true";
 
         $response = $ua->get($url);
-        
         if (!$response->is_success) {
             error($response->status_line);
         }
         
+        my @results;
         $decoded = decode_json($response->decoded_content);
         if ($decoded && $decoded->{status} eq "OK") {
+            my ($olat, $olng) = split /,/, $location;
             foreach my $result (@{$decoded->{results}}) {
-                $result->{name} = 'Unnamed location';
+                $result->{name} = 'Address';
                 $result->{reference} = 'NONE';
                 $result->{formatted_phone_number} = '';
                 $result->{website} = '';
+                # Get address info
                 my ($street, $route, $locality, $state) = ("")x4;
                 foreach my $component (@{$result->{address_components}}) {
        	            foreach my $type (@{$component->{types}}) {
@@ -81,12 +86,35 @@ $R->no_cache(1);                  # Send Pragma and Cache-Control headers
                     }
                     $result->{vicinity} = join ', ', ("$street $route", $locality);
                 }
+                # Get distance
+                my ($lat, $lng) = ($result->{geometry}->{location}->{lat},
+                                   $result->{geometry}->{location}->{lng});
+                my $dist = eval { $geo->distance( 'mile', $olat,$olng => $lat,$lng) };
+                unless ($@) {
+                    $result->{distance} = $dist;
+                    push @results, $result;
+                }
             }
         }
-        $content = encode_json($decoded);
-    } else {
-        $content = $response->decoded_content;
+        my @sorted = sort distance_cmp @results;
+        $decoded->{results} = \@sorted;
+    } elsif ($decoded && $decoded->{status} eq "OK") {
+        my @results;
+        my ($olat, $olng) = split /,/, $location;
+        foreach my $result (@{$decoded->{results}}) {
+            # Get distance
+            my ($lat, $lng) = ($result->{geometry}->{location}->{lat},
+                               $result->{geometry}->{location}->{lng});
+            my $dist = eval { $geo->distance( 'mile', $olat,$olng => $lat,$lng) };
+            unless ($@) {
+                $result->{distance} = $dist;
+                push @results, $result;
+            }
+        }
+        my @sorted = sort distance_cmp @results;
+        $decoded->{results} = \@sorted;
     }
+    $content = encode_json($decoded);
 
     $R->content_type('application/json');
     if ($cb) {
@@ -96,6 +124,8 @@ $R->no_cache(1);                  # Send Pragma and Cache-Control headers
     }
     return Apache2::Const::OK;
 }
+
+sub distance_cmp { $a->{distance} <=> $b->{distance} }
 
 sub error {
     my ($err) = @_;
