@@ -65,6 +65,7 @@ $R->no_cache(1);                  # Send Pragma and Cache-Control headers
         $decoded = decode_json($response->decoded_content);
         if ($decoded && $decoded->{status} eq "OK") {
             my ($olat, $olng) = split /,/, $location;
+            my %unique; # handle dups returned by api
             foreach my $result (@{$decoded->{results}}) {
                 $result->{name} = 'Address';
                 $result->{reference} = 'NONE';
@@ -73,7 +74,7 @@ $R->no_cache(1);                  # Send Pragma and Cache-Control headers
                 # Get address info
                 my ($street, $route, $locality, $state) = ("")x4;
                 foreach my $component (@{$result->{address_components}}) {
-       	            foreach my $type (@{$component->{types}}) {
+                    foreach my $type (@{$component->{types}}) {
                         if ($type eq 'street_number') {
                             $street = $component->{short_name};
                         } elsif ($type eq 'route') {
@@ -86,6 +87,7 @@ $R->no_cache(1);                  # Send Pragma and Cache-Control headers
                     }
                     $result->{vicinity} = join ', ', ("$street $route", $locality);
                 }
+                next if $unique{$result->{vicinity}}++;
                 # Get distance
                 my ($lat, $lng) = ($result->{geometry}->{location}->{lat},
                                    $result->{geometry}->{location}->{lng});
