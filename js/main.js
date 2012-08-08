@@ -3,9 +3,9 @@ var gSkin = '247';
 //var gSkin = 'att';
 
 // Business API information
-var gResourceRootSslUrl = "https://ec2-184-72-7-75.us-west-1.compute.amazonaws.com";
-var gResourceRootUrl    = "http://ec2-184-72-7-75.us-west-1.compute.amazonaws.com";
-var gApiPath            = '/perl/demo-411-tmp';
+var gResourceRootSslUrl = "";
+var gResourceRootUrl    = "";
+var gApiPath            = 'perl';
 var gSearchServiceURI   = gResourceRootUrl + gApiPath + "/search/search-jsonp.pl?callback=?";
 var gListingServiceURI  = gResourceRootUrl + gApiPath + "/search/details-jsonp.pl?callback=?";
 var gBusinessSearchNumResults = 10;
